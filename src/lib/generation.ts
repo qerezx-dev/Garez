@@ -1,20 +1,21 @@
 export type GenerationPayload = {
   prompt: string;
   negativePrompt: string;
-  model: string;
-  style: string;
+  providerId: string;
+  providerName: string;
   aspect: string;
   quality: string;
-  mode: "image" | "video";
+  creativity: number;
+  seed: string;
+  outputCount: number;
   hasReference: boolean;
+  mode: "image" | "video";
 };
 
-export type PreviewState = {
-  prompt: string;
-  mode: "image" | "video";
-  model: string;
-  style: string;
-  aspect: string;
-  quality: string;
-  progress: number;
-};
+export type GenerationStatus =
+  | "idle"
+  | "queued"
+  | "generating"
+  | "refining"
+  | "complete"
+  | "error";

@@ -6,38 +6,51 @@ import {
   Film,
   ImageIcon,
   Maximize2,
-  Play,
   RefreshCw,
 } from "lucide-react";
 
 import { GlassPanel } from "@/components/studio/glass-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import type { GenerationStatus } from "@/lib/generation";
 import type { Creation } from "@/lib/studio-data";
 import { cn } from "@/lib/utils";
 
 type LivePreviewProps = {
   prompt: string;
-  mode: "image" | "video";
   model: string;
-  style: string;
   aspect: string;
   quality: string;
+  creativity: number;
+  seed: string;
+  outputCount: number;
   isGenerating: boolean;
   progress: number;
+  status: GenerationStatus;
   history: Creation[];
   onSelectHistory: (item: Creation) => void;
 };
 
+const STATUS_COPY: Record<GenerationStatus, string> = {
+  idle: "Waiting for prompt",
+  queued: "Queued in studio pipeline",
+  generating: "Composing visual structure",
+  refining: "Refining detail and lighting",
+  complete: "Generation complete",
+  error: "Generation failed",
+};
+
 export function LivePreview({
   prompt,
-  mode,
   model,
-  style,
   aspect,
   quality,
+  creativity,
+  seed,
+  outputCount,
   isGenerating,
   progress,
+  status,
   history,
   onSelectHistory,
 }: LivePreviewProps) {
@@ -49,14 +62,14 @@ export function LivePreview({
       strong
       glow
       framed
-      className="flex h-full min-h-[420px] flex-col lg:min-h-[560px]"
+      className="flex h-full min-h-[480px] flex-col lg:min-h-[640px]"
     >
       <div className="flex items-center justify-between border-b border-white/8 px-4 py-3.5 sm:px-5">
         <div>
           <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
-            Live Preview
+            Preview Panel
           </p>
-          <p className="mt-1 text-sm font-medium text-white">Canvas Output</p>
+          <p className="mt-1 text-sm font-medium text-white">Live Output</p>
         </div>
         <div className="flex items-center gap-1.5">
           <Badge
@@ -64,7 +77,9 @@ export function LivePreview({
               "border",
               isGenerating
                 ? "border-amber-300/20 bg-amber-300/10 text-amber-100"
-                : "border-emerald-400/20 bg-emerald-400/10 text-emerald-100"
+                : hasPrompt
+                  ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-100"
+                  : "border-white/10 bg-white/5 text-white/60"
             )}
           >
             <span
@@ -72,10 +87,12 @@ export function LivePreview({
                 "mr-1.5 size-1.5 rounded-full",
                 isGenerating
                   ? "bg-amber-300 shadow-[0_0_8px_oklch(0.85_0.15_90)]"
-                  : "bg-emerald-300 shadow-[0_0_8px_oklch(0.8_0.17_150)]"
+                  : hasPrompt
+                    ? "bg-emerald-300 shadow-[0_0_8px_oklch(0.8_0.17_150)]"
+                    : "bg-white/40"
               )}
             />
-            {isGenerating ? "Rendering" : "Ready"}
+            {isGenerating ? "Rendering" : hasPrompt ? "Ready" : "Idle"}
           </Badge>
           <Button
             variant="ghost"
@@ -126,20 +143,17 @@ export function LivePreview({
                   transition={{ duration: 2.2, repeat: Infinity }}
                 />
                 <div className="absolute inset-0 grid place-items-center">
-                  {mode === "video" ? (
-                    <Film className="size-6 text-white" />
-                  ) : (
-                    <ImageIcon className="size-6 text-white" />
-                  )}
+                  <ImageIcon className="size-6 text-white" />
                 </div>
               </div>
+
               <div className="w-full space-y-3">
                 <div>
                   <p className="font-display text-lg font-semibold text-white">
-                    Composing your scene
+                    Generating preview
                   </p>
                   <p className="mt-1 text-sm text-white/55">
-                    Lighting, materials, and composition are resolving…
+                    {STATUS_COPY[status]}
                   </p>
                 </div>
                 <div className="w-full space-y-2 text-left">
@@ -153,9 +167,7 @@ export function LivePreview({
                     <motion.div
                       className="h-full rounded-full bg-gradient-to-r from-neon-blue via-[#7a6cff] to-neon-purple"
                       initial={{ width: "0%" }}
-                      animate={{
-                        width: `${Math.min(progress, 100)}%`,
-                      }}
+                      animate={{ width: `${Math.min(progress, 100)}%` }}
                       transition={{ ease: "easeOut", duration: 0.25 }}
                     />
                   </div>
@@ -164,7 +176,7 @@ export function LivePreview({
             </motion.div>
           ) : hasPrompt ? (
             <motion.div
-              key={`${mode}-${prompt}`}
+              key={prompt}
               initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
@@ -180,38 +192,33 @@ export function LivePreview({
                 >
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,oklch(0.8_0.12_220/0.2),transparent_40%),radial-gradient(circle_at_80%_70%,oklch(0.7_0.18_300/0.22),transparent_45%)]" />
                   <div className="relative flex h-full min-h-[220px] flex-col justify-between">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex flex-wrap gap-1.5">
-                        <Badge
-                          variant="secondary"
-                          className="border border-white/10 bg-black/30 text-white/80"
-                        >
-                          {mode === "video" ? "Video Preview" : "Image Preview"}
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="border border-white/10 bg-black/30 text-white/70"
-                        >
-                          {aspect}
-                        </Badge>
-                      </div>
-                      {mode === "video" && (
-                        <Button
-                          size="icon-sm"
-                          variant="ghost"
-                          className="rounded-full bg-white/10 text-white hover:bg-white/20"
-                          aria-label="Play preview"
-                        >
-                          <Play className="size-3.5 fill-current" />
-                        </Button>
-                      )}
+                    <div className="flex flex-wrap gap-1.5">
+                      <Badge
+                        variant="secondary"
+                        className="border border-white/10 bg-black/30 text-white/80"
+                      >
+                        Preview
+                      </Badge>
+                      <Badge
+                        variant="secondary"
+                        className="border border-white/10 bg-black/30 text-white/70"
+                      >
+                        {aspect}
+                      </Badge>
+                      <Badge
+                        variant="secondary"
+                        className="border border-white/10 bg-black/30 text-white/70"
+                      >
+                        ×{outputCount}
+                      </Badge>
                     </div>
                     <div>
                       <p className="font-display text-xl font-semibold tracking-tight text-white text-balance sm:text-2xl">
                         {prompt}
                       </p>
                       <p className="mt-2 text-sm text-white/55">
-                        {model} · {style} · {quality}
+                        {model} · {quality} · Creativity {creativity} · Seed{" "}
+                        {seed}
                       </p>
                     </div>
                   </div>
@@ -230,27 +237,39 @@ export function LivePreview({
                 <Clapperboard className="size-5 text-neon-cyan" />
               </div>
               <p className="font-display text-xl font-semibold text-white">
-                Your creation appears here
+                Preview your next creation
               </p>
               <p className="mt-2 text-sm leading-relaxed text-white/50">
-                Generate from the console to stream a cinematic studio preview.
+                Configure the Prompt Studio and generate to populate this panel.
               </p>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
+      <div className="space-y-3 border-t border-white/8 px-4 py-4 sm:px-5">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
+              Generation Status
+            </p>
+            <p className="mt-1 text-sm text-white/75">{STATUS_COPY[status]}</p>
+          </div>
+          <p className="text-xs tabular-nums text-white/40">
+            {Math.round(Math.min(progress, 100))}%
+          </p>
+        </div>
+      </div>
+
       <div
         id="history"
         className="border-t border-white/8 px-4 py-4 sm:px-5"
       >
-        <div className="mb-3 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
-              Recent Creations
-            </p>
-            <p className="mt-1 text-sm text-white/70">History</p>
-          </div>
+        <div className="mb-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
+            Recent Creations
+          </p>
+          <p className="mt-1 text-sm text-white/70">History</p>
         </div>
         <div className="grid gap-2 sm:grid-cols-3">
           {history.slice(0, 3).map((item, index) => (
@@ -282,7 +301,9 @@ export function LivePreview({
               <p className="line-clamp-2 text-xs font-medium text-white/85 group-hover:text-white">
                 {item.prompt}
               </p>
-              <p className="mt-1 text-[11px] text-white/40">{item.createdAt}</p>
+              <p className="mt-1 text-[11px] text-white/40">
+                {item.model} · {item.createdAt}
+              </p>
             </motion.button>
           ))}
         </div>
