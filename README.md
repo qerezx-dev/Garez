@@ -4,10 +4,12 @@ Premium AI creation platform homepage built with Next.js 15, React, TypeScript, 
 
 ## Features
 
-- Dark-mode Studio shell with glassmorphism and neon ambient lighting
+- Cinematic aurora background with particles, nebula depth, and soft light rays
+- Frosted-glass Studio shell with mouse-glow interactions
 - Left sidebar navigation and top bar (search, credits, notifications, profile)
-- Hero creation surface with prompt box, generate action, and live preview
-- AI tools grid with smooth motion
+- Advanced prompt console: upload/drag-drop, model/style/aspect/quality, negative prompt
+- Live preview with generation progress, image/video modes, and recent history
+- Premium AI tool cards (Image, Video, Music, Voice, Code, Agent, Design, Documents)
 - Reusable layout and studio components
 
 ## Stack
