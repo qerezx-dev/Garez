@@ -1,5 +1,5 @@
-import { StudioShell } from "@/components/layout/studio-shell";
+import { PrismDesktop } from "@/app/_noro/prism-desktop";
 
 export default function HomePage() {
-  return <StudioShell />;
+  return <PrismDesktop />;
 }
