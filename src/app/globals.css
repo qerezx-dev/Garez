@@ -54,7 +54,7 @@
 
 :root,
 .dark {
-  --background: oklch(0.1 0.022 275);
+  --background: #05070b;
   --foreground: oklch(0.98 0.01 255);
   --card: oklch(0.17 0.03 275 / 0.5);
   --card-foreground: oklch(0.98 0.01 255);
@@ -86,9 +86,12 @@
   --sidebar-accent-foreground: oklch(0.98 0.01 255);
   --sidebar-border: oklch(0.9 0.04 255 / 0.1);
   --sidebar-ring: oklch(0.74 0.16 255);
-  --neon-blue: oklch(0.74 0.16 255);
-  --neon-purple: oklch(0.7 0.2 300);
-  --neon-cyan: oklch(0.82 0.13 220);
+  --neon-blue: #3b82f6;
+  --neon-purple: #8b5cf6;
+  --neon-cyan: #06b6d4;
+  --brand-blue: #3b82f6;
+  --brand-purple: #8b5cf6;
+  --brand-cyan: #06b6d4;
 }
 
 @layer base {
@@ -104,7 +107,7 @@
 
   body {
     @apply bg-background text-foreground min-h-dvh overflow-x-hidden;
-    background-color: #06070d;
+    background-color: #05070b;
   }
 
   ::selection {
@@ -235,5 +238,88 @@
     100% {
       background-position: -200% 0;
     }
+  }
+
+  .text-hero-gradient {
+    background: linear-gradient(
+      110deg,
+      #e9f2ff 0%,
+      #7cc4ff 30%,
+      #6f8bff 55%,
+      #b18bff 80%,
+      #eae0ff 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: hue-drift 12s ease-in-out infinite;
+  }
+
+  @keyframes hue-drift {
+    0%,
+    100% {
+      background-position: 0% 0;
+    }
+    50% {
+      background-position: 100% 0;
+    }
+  }
+
+  .card-sheen {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      130deg,
+      transparent 30%,
+      oklch(1 0 0 / 0.06) 45%,
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  .group:hover .card-sheen {
+    opacity: 1;
+  }
+
+  .animate-float {
+    animation: float 8s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 40s linear infinite;
+  }
+
+  @keyframes spin-slow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
+  }
+
+  .glow-divider {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(0.82 0.13 220 / 0.55),
+      oklch(0.7 0.2 300 / 0.4),
+      transparent
+    );
   }
 }

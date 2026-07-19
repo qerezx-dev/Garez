@@ -1,17 +1,20 @@
 import {
   Bot,
+  Boxes,
+  Braces,
   Code2,
-  Compass,
   FileText,
   Film,
-  History,
+  FolderKanban,
   ImageIcon,
+  Images,
   LayoutDashboard,
-  MessageSquareText,
   Mic2,
   Music2,
   Palette,
-  Sparkles,
+  Settings,
+  Users,
+  Workflow,
   type LucideIcon,
 } from "lucide-react";
 
@@ -20,6 +23,13 @@ export type NavItem = {
   href: string;
   icon: LucideIcon;
   active?: boolean;
+};
+
+export type CreationMode = {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  hint: string;
 };
 
 export type AiTool = {
@@ -36,6 +46,7 @@ export type Creation = {
   id: string;
   prompt: string;
   mode: "image" | "video";
+  toolLabel: string;
   model: string;
   aspect: string;
   quality: string;
@@ -66,12 +77,22 @@ export type PromptTemplate = {
 };
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: "Studio", href: "#", icon: LayoutDashboard, active: true },
-  { label: "Create", href: "#create", icon: Sparkles },
-  { label: "Explore", href: "#tools", icon: Compass },
-  { label: "Assets", href: "#preview", icon: ImageIcon },
-  { label: "History", href: "#history", icon: History },
-  { label: "Chat", href: "#", icon: MessageSquareText },
+  { label: "Studio", href: "#studio", icon: LayoutDashboard, active: true },
+  { label: "Projects", href: "#projects", icon: FolderKanban },
+  { label: "Assets", href: "#preview", icon: Images },
+  { label: "Workflows", href: "#workflows", icon: Workflow },
+  { label: "Models", href: "#models", icon: Boxes },
+  { label: "Community", href: "#community", icon: Users },
+  { label: "API", href: "#api", icon: Braces },
+  { label: "Settings", href: "#settings", icon: Settings },
+];
+
+export const CREATION_MODES: CreationMode[] = [
+  { id: "image", label: "Image", icon: Images, hint: "Cinematic stills" },
+  { id: "video", label: "Video", icon: Film, hint: "Motion & film" },
+  { id: "music", label: "Music", icon: Music2, hint: "Scores & audio" },
+  { id: "code", label: "Code", icon: Code2, hint: "UI & systems" },
+  { id: "agent", label: "Agent", icon: Bot, hint: "Autonomous ops" },
 ];
 
 export const AI_TOOLS: AiTool[] = [
@@ -259,6 +280,7 @@ export const SEED_HISTORY: Creation[] = [
     id: "c1",
     prompt: "Orbital lounge with aurora glass walls",
     mode: "image",
+    toolLabel: "Image",
     model: "Stability AI",
     aspect: "16:9",
     quality: "Ultra",
@@ -271,6 +293,7 @@ export const SEED_HISTORY: Creation[] = [
     id: "c2",
     prompt: "Slow dolly through a neon mist corridor",
     mode: "video",
+    toolLabel: "Video",
     model: "Fal AI",
     aspect: "9:16",
     quality: "High",
@@ -283,6 +306,7 @@ export const SEED_HISTORY: Creation[] = [
     id: "c3",
     prompt: "Titanium earbud on black velvet, soft rim light",
     mode: "image",
+    toolLabel: "Image",
     model: "OpenAI",
     aspect: "1:1",
     quality: "Ultra",

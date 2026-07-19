@@ -10,6 +10,8 @@ export type GenerationPayload = {
   outputCount: number;
   hasReference: boolean;
   mode: "image" | "video";
+  toolId: string;
+  toolLabel: string;
 };
 
 export type GenerationStatus =

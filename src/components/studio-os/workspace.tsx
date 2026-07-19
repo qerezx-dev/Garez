@@ -1,23 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
 
-import { AiTools } from "@/components/studio/ai-tools";
-import { LivePreview } from "@/components/studio/live-preview";
-import { PromptStudio } from "@/components/studio/prompt-studio";
+import { AiToolsGrid } from "@/components/studio-os/ai-tools-grid";
+import { CinematicBackground } from "@/components/studio-os/cinematic-background";
+import { FloatingSidebar } from "@/components/studio-os/floating-sidebar";
+import { FloatingTopBar } from "@/components/studio-os/floating-topbar";
+import { Hero } from "@/components/studio-os/hero";
+import { LivePreviewPanel } from "@/components/studio-os/live-preview-panel";
+import { PromptCommandCenter } from "@/components/studio-os/prompt-command-center";
 import type { GenerationPayload, GenerationStatus } from "@/lib/generation";
 import { SEED_HISTORY, type Creation } from "@/lib/studio-data";
 
-export function HeroSection() {
+export function Workspace() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activePrompt, setActivePrompt] = useState("");
   const [draftPrompt, setDraftPrompt] = useState("");
   const [model, setModel] = useState("OpenAI");
   const [aspect, setAspect] = useState("16:9");
   const [quality, setQuality] = useState("High");
   const [creativity, setCreativity] = useState(65);
-  const [seed, setSeed] = useState("random");
-  const [outputCount, setOutputCount] = useState(1);
+  const [toolLabel, setToolLabel] = useState("Image");
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState<GenerationStatus>("idle");
@@ -44,8 +47,7 @@ export function HeroSection() {
     setAspect(payload.aspect);
     setQuality(payload.quality);
     setCreativity(payload.creativity);
-    setSeed(payload.seed);
-    setOutputCount(payload.outputCount);
+    setToolLabel(payload.toolLabel);
 
     progressRef.current = window.setInterval(() => {
       setProgress((value) => {
@@ -65,6 +67,7 @@ export function HeroSection() {
         id: `gen-${Date.now()}`,
         prompt: payload.prompt,
         mode: payload.mode,
+        toolLabel: payload.toolLabel,
         model: payload.providerName,
         aspect: payload.aspect,
         quality: payload.quality,
@@ -77,10 +80,11 @@ export function HeroSection() {
       setActivePrompt(payload.prompt);
       setHistory((items) => [creation, ...items].slice(0, 6));
       setIsGenerating(false);
+
       window.setTimeout(() => {
         setProgress(0);
         setStatus("idle");
-      }, 900);
+      }, 1000);
     }, 2400);
   };
 
@@ -91,76 +95,52 @@ export function HeroSection() {
     setAspect(item.aspect);
     setQuality(item.quality);
     setCreativity(item.creativity);
-    setSeed(item.seed);
-    setOutputCount(item.outputCount);
+    setToolLabel(item.toolLabel);
     setIsGenerating(false);
     setProgress(0);
     setStatus("complete");
   };
 
   return (
-    <div
-      id="create"
-      className="mx-auto w-full max-w-[1440px] space-y-12 px-4 py-8 sm:px-6 lg:space-y-14 lg:py-12"
-    >
-      <motion.section
-        initial={{ opacity: 0, y: 28, filter: "blur(8px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="max-w-3xl space-y-4"
-      >
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
-          <span className="size-1.5 rounded-full bg-neon-cyan shadow-[0_0_12px_oklch(0.82_0.13_220)]" />
-          <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-white/55">
-            NORO Studio
-          </p>
+    <div className="relative min-h-dvh">
+      <CinematicBackground />
+      <FloatingSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <div className="relative lg:pl-[314px]">
+        <div className="mx-auto w-full max-w-[1680px] px-4 pb-24 sm:px-6">
+          <FloatingTopBar onMenuOpen={() => setSidebarOpen(true)} />
+
+          <Hero />
+
+          <div className="mt-10 grid items-start gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(400px,0.85fr)]">
+            <PromptCommandCenter
+              onGenerate={handleGenerate}
+              isGenerating={isGenerating}
+              draftPrompt={draftPrompt}
+            />
+
+            <div className="xl:sticky xl:top-28">
+              <LivePreviewPanel
+                prompt={activePrompt}
+                model={model}
+                aspect={aspect}
+                quality={quality}
+                creativity={creativity}
+                toolLabel={toolLabel}
+                isGenerating={isGenerating}
+                progress={progress}
+                status={status}
+                history={history}
+                onSelectHistory={handleSelectHistory}
+              />
+            </div>
+          </div>
+
+          <div className="mt-16">
+            <AiToolsGrid />
+          </div>
         </div>
-        <h1 className="font-display text-4xl font-semibold tracking-[-0.045em] text-white sm:text-5xl lg:text-[3.75rem] lg:leading-[1.05]">
-          Create Anything with <span className="neon-text">AI</span>
-        </h1>
-        <p className="max-w-2xl text-base leading-relaxed text-white/55 sm:text-lg">
-          A real AI workspace for prompts, models, and generation control —
-          frontend architecture ready for provider integrations.
-        </p>
-      </motion.section>
-
-      <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)] xl:gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ delay: 0.1, duration: 0.6 }}
-        >
-          <PromptStudio
-            onGenerate={handleGenerate}
-            isGenerating={isGenerating}
-            draftPrompt={draftPrompt}
-          />
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ delay: 0.18, duration: 0.6 }}
-          className="xl:sticky xl:top-24"
-        >
-          <LivePreview
-            prompt={activePrompt}
-            model={model}
-            aspect={aspect}
-            quality={quality}
-            creativity={creativity}
-            seed={seed}
-            outputCount={outputCount}
-            isGenerating={isGenerating}
-            progress={progress}
-            status={status}
-            history={history}
-            onSelectHistory={handleSelectHistory}
-          />
-        </motion.div>
       </div>
-
-      <AiTools />
     </div>
   );
 }
