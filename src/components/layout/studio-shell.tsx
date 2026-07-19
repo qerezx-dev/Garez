@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 import { Sidebar } from "@/components/layout/sidebar";
 import { TopNav } from "@/components/layout/top-nav";
@@ -16,12 +17,17 @@ export function StudioShell() {
 
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="relative z-10 flex min-w-0 flex-1 flex-col">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 flex min-w-0 flex-1 flex-col"
+      >
         <TopNav onMenuOpen={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto pb-20">
+        <main className="flex-1 overflow-y-auto pb-24">
           <HeroSection />
         </main>
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -3,9 +3,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Clapperboard,
-  Film,
   ImageIcon,
   Maximize2,
+  Play,
   RefreshCw,
 } from "lucide-react";
 
@@ -13,7 +13,6 @@ import { GlassPanel } from "@/components/studio/glass-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { GenerationStatus } from "@/lib/generation";
-import type { Creation } from "@/lib/studio-data";
 import { cn } from "@/lib/utils";
 
 type LivePreviewProps = {
@@ -27,8 +26,7 @@ type LivePreviewProps = {
   isGenerating: boolean;
   progress: number;
   status: GenerationStatus;
-  history: Creation[];
-  onSelectHistory: (item: Creation) => void;
+  mode?: "image" | "video";
 };
 
 const STATUS_COPY: Record<GenerationStatus, string> = {
@@ -51,8 +49,7 @@ export function LivePreview({
   isGenerating,
   progress,
   status,
-  history,
-  onSelectHistory,
+  mode = "image",
 }: LivePreviewProps) {
   const hasPrompt = prompt.trim().length > 0;
 
@@ -62,14 +59,16 @@ export function LivePreview({
       strong
       glow
       framed
-      className="flex h-full min-h-[480px] flex-col lg:min-h-[640px]"
+      className="flex h-full min-h-[520px] flex-col lg:min-h-[720px]"
     >
-      <div className="flex items-center justify-between border-b border-white/8 px-4 py-3.5 sm:px-5">
+      <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
         <div>
           <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
-            Preview Panel
+            Live Preview
           </p>
-          <p className="mt-1 text-sm font-medium text-white">Live Output</p>
+          <p className="mt-1 text-sm font-medium text-white">
+            Image & video canvas
+          </p>
         </div>
         <div className="flex items-center gap-1.5">
           <Badge
@@ -113,9 +112,9 @@ export function LivePreview({
         </div>
       </div>
 
-      <div className="relative flex flex-1 items-center justify-center overflow-hidden p-4 sm:p-5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,oklch(0.55_0.18_255/0.2),transparent_42%),radial-gradient(circle_at_75%_75%,oklch(0.5_0.2_300/0.18),transparent_48%)]" />
-        <div className="absolute inset-0 soft-grid opacity-40" />
+      <div className="relative flex flex-1 items-center justify-center overflow-hidden p-5">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,oklch(0.55_0.18_255/0.22),transparent_42%),radial-gradient(circle_at_75%_75%,oklch(0.5_0.2_300/0.2),transparent_48%)]" />
+        <div className="absolute inset-0 soft-grid opacity-35" />
 
         <AnimatePresence mode="wait">
           {isGenerating ? (
@@ -126,19 +125,19 @@ export function LivePreview({
               exit={{ opacity: 0, scale: 1.02, filter: "blur(6px)" }}
               className="relative z-10 flex w-full max-w-md flex-col items-center gap-5 text-center"
             >
-              <div className="relative size-32">
+              <div className="relative size-36">
                 <motion.div
                   className="absolute inset-0 rounded-full border border-neon-blue/35"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                 />
                 <motion.div
-                  className="absolute inset-3 rounded-full border border-dashed border-neon-purple/45"
+                  className="absolute inset-4 rounded-full border border-dashed border-neon-purple/45"
                   animate={{ rotate: -360 }}
                   transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
                 />
                 <motion.div
-                  className="absolute inset-7 rounded-3xl bg-gradient-to-br from-neon-blue/40 to-neon-purple/40"
+                  className="absolute inset-9 rounded-3xl bg-gradient-to-br from-neon-blue/45 to-neon-purple/45"
                   animate={{ opacity: [0.45, 1, 0.45], scale: [0.94, 1.06, 0.94] }}
                   transition={{ duration: 2.2, repeat: Infinity }}
                 />
@@ -146,10 +145,9 @@ export function LivePreview({
                   <ImageIcon className="size-6 text-white" />
                 </div>
               </div>
-
               <div className="w-full space-y-3">
                 <div>
-                  <p className="font-display text-lg font-semibold text-white">
+                  <p className="font-display text-xl font-semibold text-white">
                     Generating preview
                   </p>
                   <p className="mt-1 text-sm text-white/55">
@@ -165,7 +163,7 @@ export function LivePreview({
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
                     <motion.div
-                      className="h-full rounded-full bg-gradient-to-r from-neon-blue via-[#7a6cff] to-neon-purple"
+                      className="h-full rounded-full bg-gradient-to-r from-neon-cyan via-neon-blue to-neon-purple"
                       initial={{ width: "0%" }}
                       animate={{ width: `${Math.min(progress, 100)}%` }}
                       transition={{ ease: "easeOut", duration: 0.25 }}
@@ -181,39 +179,51 @@ export function LivePreview({
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-10 w-full max-w-lg"
+              className="relative z-10 w-full max-w-xl"
             >
-              <div className="overflow-hidden rounded-3xl border border-white/12 bg-[#0b1020]/85 shadow-[0_30px_80px_oklch(0.18_0.08_275/0.55)]">
+              <div className="overflow-hidden rounded-[28px] border border-white/12 bg-[#0b1020]/88 shadow-[0_40px_100px_oklch(0.16_0.08_275/0.55)]">
                 <div
                   className={cn(
-                    "relative bg-gradient-to-br from-[#182554] via-[#2a1848] to-[#0c1b2c] p-5",
+                    "relative bg-gradient-to-br from-[#1a2758] via-[#2c184d] to-[#0c1b2c] p-6",
                     aspectClass(aspect)
                   )}
                 >
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,oklch(0.8_0.12_220/0.2),transparent_40%),radial-gradient(circle_at_80%_70%,oklch(0.7_0.18_300/0.22),transparent_45%)]" />
-                  <div className="relative flex h-full min-h-[220px] flex-col justify-between">
-                    <div className="flex flex-wrap gap-1.5">
-                      <Badge
-                        variant="secondary"
-                        className="border border-white/10 bg-black/30 text-white/80"
-                      >
-                        Preview
-                      </Badge>
-                      <Badge
-                        variant="secondary"
-                        className="border border-white/10 bg-black/30 text-white/70"
-                      >
-                        {aspect}
-                      </Badge>
-                      <Badge
-                        variant="secondary"
-                        className="border border-white/10 bg-black/30 text-white/70"
-                      >
-                        ×{outputCount}
-                      </Badge>
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,oklch(0.8_0.12_220/0.22),transparent_40%),radial-gradient(circle_at_80%_70%,oklch(0.7_0.18_300/0.24),transparent_45%)]" />
+                  <div className="relative flex h-full min-h-[260px] flex-col justify-between">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex flex-wrap gap-1.5">
+                        <Badge
+                          variant="secondary"
+                          className="border border-white/10 bg-black/30 text-white/80"
+                        >
+                          {mode === "video" ? "Video Preview" : "Image Preview"}
+                        </Badge>
+                        <Badge
+                          variant="secondary"
+                          className="border border-white/10 bg-black/30 text-white/70"
+                        >
+                          {aspect}
+                        </Badge>
+                        <Badge
+                          variant="secondary"
+                          className="border border-white/10 bg-black/30 text-white/70"
+                        >
+                          ×{outputCount}
+                        </Badge>
+                      </div>
+                      {mode === "video" && (
+                        <Button
+                          size="icon-sm"
+                          variant="ghost"
+                          className="rounded-full bg-white/10 text-white hover:bg-white/20"
+                          aria-label="Play preview"
+                        >
+                          <Play className="size-3.5 fill-current" />
+                        </Button>
+                      )}
                     </div>
                     <div>
-                      <p className="font-display text-xl font-semibold tracking-tight text-white text-balance sm:text-2xl">
+                      <p className="font-display text-2xl font-semibold tracking-tight text-white text-balance">
                         {prompt}
                       </p>
                       <p className="mt-2 text-sm text-white/55">
@@ -237,17 +247,18 @@ export function LivePreview({
                 <Clapperboard className="size-5 text-neon-cyan" />
               </div>
               <p className="font-display text-xl font-semibold text-white">
-                Preview your next creation
+                Your canvas awaits
               </p>
               <p className="mt-2 text-sm leading-relaxed text-white/50">
-                Configure the Prompt Studio and generate to populate this panel.
+                Generate from the Prompt Studio to stream a cinematic image or
+                video preview here.
               </p>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      <div className="space-y-3 border-t border-white/8 px-4 py-4 sm:px-5">
+      <div className="border-t border-white/8 px-5 py-4">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
@@ -258,54 +269,6 @@ export function LivePreview({
           <p className="text-xs tabular-nums text-white/40">
             {Math.round(Math.min(progress, 100))}%
           </p>
-        </div>
-      </div>
-
-      <div
-        id="history"
-        className="border-t border-white/8 px-4 py-4 sm:px-5"
-      >
-        <div className="mb-3">
-          <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
-            Recent Creations
-          </p>
-          <p className="mt-1 text-sm text-white/70">History</p>
-        </div>
-        <div className="grid gap-2 sm:grid-cols-3">
-          {history.slice(0, 3).map((item, index) => (
-            <motion.button
-              key={item.id}
-              type="button"
-              onClick={() => onSelectHistory(item)}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-              className="group rounded-2xl border border-white/8 bg-white/[0.03] p-3 text-left transition hover:border-neon-blue/30 hover:bg-white/[0.06]"
-            >
-              <div
-                className={cn(
-                  "mb-2.5 overflow-hidden rounded-xl",
-                  item.mode === "video"
-                    ? "bg-gradient-to-br from-violet-500/30 to-fuchsia-600/20"
-                    : "bg-gradient-to-br from-sky-500/30 to-indigo-600/20"
-                )}
-              >
-                <div className="flex aspect-[16/10] items-end p-2">
-                  {item.mode === "video" ? (
-                    <Film className="size-3.5 text-white/80" />
-                  ) : (
-                    <ImageIcon className="size-3.5 text-white/80" />
-                  )}
-                </div>
-              </div>
-              <p className="line-clamp-2 text-xs font-medium text-white/85 group-hover:text-white">
-                {item.prompt}
-              </p>
-              <p className="mt-1 text-[11px] text-white/40">
-                {item.model} · {item.createdAt}
-              </p>
-            </motion.button>
-          ))}
         </div>
       </div>
     </GlassPanel>
@@ -319,7 +282,7 @@ function aspectClass(aspect: string) {
     case "4:5":
       return "aspect-[4/5]";
     case "9:16":
-      return "aspect-[9/16] max-h-[360px] mx-auto w-full";
+      return "aspect-[9/16] max-h-[420px] mx-auto w-full";
     case "21:9":
       return "aspect-[21/9]";
     case "16:9":

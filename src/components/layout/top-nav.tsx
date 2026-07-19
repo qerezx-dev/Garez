@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Bell, Coins, Command, Menu, Search } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -27,12 +28,17 @@ type TopNavProps = {
 
 export function TopNav({ onMenuOpen }: TopNavProps) {
   return (
-    <header className="sticky top-0 z-30 border-b border-white/8 bg-[#070912]/55 px-4 py-3 backdrop-blur-2xl sm:px-6">
-      <div className="flex items-center gap-3">
+    <motion.header
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      className="sticky top-3 z-30 px-3 sm:px-4 lg:px-5"
+    >
+      <div className="glass-float flex items-center gap-3 rounded-[24px] px-3 py-2.5 sm:px-4">
         <Button
           variant="ghost"
           size="icon"
-          className="text-white/80 hover:bg-white/8 hover:text-white lg:hidden"
+          className="rounded-xl text-white/80 hover:bg-white/8 hover:text-white lg:hidden"
           onClick={onMenuOpen}
           aria-label="Open navigation"
         >
@@ -44,9 +50,9 @@ export function TopNav({ onMenuOpen }: TopNavProps) {
           <Input
             type="search"
             placeholder="Search prompts, tools, and assets…"
-            className="h-11 w-full rounded-2xl border-white/10 bg-white/[0.04] pl-11 pr-16 text-sm text-white placeholder:text-white/35 focus-visible:border-neon-blue/45 focus-visible:ring-neon-blue/20"
+            className="h-11 w-full rounded-2xl border-white/10 bg-white/[0.035] pl-11 pr-16 text-sm text-white placeholder:text-white/35 focus-visible:border-neon-blue/45 focus-visible:ring-neon-blue/20"
           />
-          <div className="pointer-events-none absolute top-1/2 right-2.5 flex -translate-y-1/2 items-center gap-1 rounded-lg border border-white/10 bg-white/[0.04] px-2 py-1 text-[11px] text-white/40">
+          <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-1 rounded-lg border border-white/10 bg-white/[0.04] px-2 py-1 text-[11px] text-white/40 sm:flex">
             <Command className="size-3" />
             <span>K</span>
           </div>
@@ -109,7 +115,7 @@ export function TopNav({ onMenuOpen }: TopNavProps) {
                   NS
                 </AvatarFallback>
               </Avatar>
-              <span className="hidden text-left sm:block">
+              <span className="hidden text-left md:block">
                 <span className="block text-xs font-medium text-white">
                   Nora Sato
                 </span>
@@ -131,6 +137,6 @@ export function TopNav({ onMenuOpen }: TopNavProps) {
           </DropdownMenu>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }

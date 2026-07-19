@@ -6,8 +6,19 @@ import { motion } from "framer-motion";
 import { AiTools } from "@/components/studio/ai-tools";
 import { LivePreview } from "@/components/studio/live-preview";
 import { PromptStudio } from "@/components/studio/prompt-studio";
+import { RecentCarousel } from "@/components/studio/recent-carousel";
 import type { GenerationPayload, GenerationStatus } from "@/lib/generation";
 import { SEED_HISTORY, type Creation } from "@/lib/studio-data";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 28, filter: "blur(8px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
 
 export function HeroSection() {
   const [activePrompt, setActivePrompt] = useState("");
@@ -18,6 +29,7 @@ export function HeroSection() {
   const [creativity, setCreativity] = useState(65);
   const [seed, setSeed] = useState("random");
   const [outputCount, setOutputCount] = useState(1);
+  const [mode, setMode] = useState<"image" | "video">("image");
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState<GenerationStatus>("idle");
@@ -46,6 +58,7 @@ export function HeroSection() {
     setCreativity(payload.creativity);
     setSeed(payload.seed);
     setOutputCount(payload.outputCount);
+    setMode(payload.mode);
 
     progressRef.current = window.setInterval(() => {
       setProgress((value) => {
@@ -75,7 +88,7 @@ export function HeroSection() {
       };
 
       setActivePrompt(payload.prompt);
-      setHistory((items) => [creation, ...items].slice(0, 6));
+      setHistory((items) => [creation, ...items].slice(0, 8));
       setIsGenerating(false);
       window.setTimeout(() => {
         setProgress(0);
@@ -93,43 +106,41 @@ export function HeroSection() {
     setCreativity(item.creativity);
     setSeed(item.seed);
     setOutputCount(item.outputCount);
+    setMode(item.mode);
     setIsGenerating(false);
     setProgress(0);
     setStatus("complete");
   };
 
   return (
-    <div
+    <motion.div
       id="create"
-      className="mx-auto w-full max-w-[1440px] space-y-12 px-4 py-8 sm:px-6 lg:space-y-14 lg:py-12"
+      initial="hidden"
+      animate="show"
+      variants={{
+        hidden: {},
+        show: { transition: { staggerChildren: 0.08 } },
+      }}
+      className="mx-auto w-full max-w-[1500px] space-y-12 px-4 py-8 sm:px-6 lg:space-y-16 lg:px-8 lg:py-12"
     >
-      <motion.section
-        initial={{ opacity: 0, y: 28, filter: "blur(8px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="max-w-3xl space-y-4"
-      >
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
-          <span className="size-1.5 rounded-full bg-neon-cyan shadow-[0_0_12px_oklch(0.82_0.13_220)]" />
+      <motion.section variants={fadeUp} className="mx-auto max-w-3xl text-center">
+        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 shadow-[0_0_30px_oklch(0.65_0.14_255/0.12)]">
+          <span className="size-1.5 rounded-full bg-neon-cyan shadow-[0_0_12px_oklch(0.84_0.12_220)]" />
           <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-white/55">
             NORO Studio
           </p>
         </div>
-        <h1 className="font-display text-4xl font-semibold tracking-[-0.045em] text-white sm:text-5xl lg:text-[3.75rem] lg:leading-[1.05]">
+        <h1 className="font-display text-4xl font-semibold tracking-[-0.05em] text-white sm:text-5xl lg:text-[4.2rem] lg:leading-[1.02]">
           Create Anything with <span className="neon-text">AI</span>
         </h1>
-        <p className="max-w-2xl text-base leading-relaxed text-white/55 sm:text-lg">
-          A real AI workspace for prompts, models, and generation control —
-          frontend architecture ready for provider integrations.
+        <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/55 sm:text-lg">
+          A luxury AI operating system for prompts, models, and cinematic
+          previews — designed with quiet power and absolute polish.
         </p>
       </motion.section>
 
-      <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)] xl:gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ delay: 0.1, duration: 0.6 }}
-        >
+      <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(340px,0.85fr)] xl:gap-7">
+        <motion.div variants={fadeUp}>
           <PromptStudio
             onGenerate={handleGenerate}
             isGenerating={isGenerating}
@@ -137,12 +148,7 @@ export function HeroSection() {
           />
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ delay: 0.18, duration: 0.6 }}
-          className="xl:sticky xl:top-24"
-        >
+        <motion.div variants={fadeUp} className="xl:sticky xl:top-28">
           <LivePreview
             prompt={activePrompt}
             model={model}
@@ -154,13 +160,18 @@ export function HeroSection() {
             isGenerating={isGenerating}
             progress={progress}
             status={status}
-            history={history}
-            onSelectHistory={handleSelectHistory}
+            mode={mode}
           />
         </motion.div>
       </div>
 
-      <AiTools />
-    </div>
+      <motion.div variants={fadeUp}>
+        <RecentCarousel items={history} onSelect={handleSelectHistory} />
+      </motion.div>
+
+      <motion.div variants={fadeUp}>
+        <AiTools />
+      </motion.div>
+    </motion.div>
   );
 }

@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Loader2, Sparkles } from "lucide-react";
 
+import { GenerateButton } from "@/components/studio/generate-button";
 import { GenerationSettings } from "@/components/studio/generation-settings";
 import { GlassPanel } from "@/components/studio/glass-panel";
 import { ModelSelector } from "@/components/studio/model-selector";
 import { PromptEditor } from "@/components/studio/prompt-editor";
-import { Button } from "@/components/ui/button";
 import type { GenerationPayload } from "@/lib/generation";
 import {
   AI_PROVIDERS,
@@ -87,92 +85,64 @@ export function PromptStudio({
       glow
       framed
       className={cn(
-        "space-y-6 p-4 transition-shadow duration-500 sm:p-5",
+        "space-y-7 p-5 transition-shadow duration-500 sm:p-6 lg:p-7",
         focused && "neon-ring"
       )}
     >
-      <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-neon-cyan/80 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-12 top-0 h-px bg-gradient-to-r from-transparent via-neon-cyan/80 to-transparent" />
 
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-white/40">
-            AI Prompt Studio
-          </p>
-          <h2 className="mt-1 font-display text-2xl font-semibold tracking-tight text-white">
-            Workspace
-          </h2>
-        </div>
-        <p className="text-xs text-white/40">Frontend-only · APIs not connected</p>
-      </div>
-
-      <PromptEditor
-        value={prompt}
-        onChange={setPrompt}
-        referenceName={referenceName}
-        onReferenceChange={setReferenceName}
-        promptHistory={promptHistory}
-        onSelectHistoryPrompt={setPrompt}
-        focused={focused}
-        onFocusedChange={setFocused}
-        onSubmit={handleGenerate}
-      />
-
-      <div className="border-t border-white/8 pt-5">
-        <ModelSelector value={providerId} onChange={setProviderId} />
-      </div>
-
-      <div className="border-t border-white/8 pt-5">
-        <GenerationSettings value={settings} onChange={setSettings} />
-      </div>
-
-      <div className="flex flex-col gap-3 border-t border-white/8 pt-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-white/35">
-          <kbd className="rounded border border-white/10 bg-white/[0.04] px-1.5 py-0.5">
-            ⌘
-          </kbd>{" "}
-          +{" "}
-          <kbd className="rounded border border-white/10 bg-white/[0.04] px-1.5 py-0.5">
-            Enter
-          </kbd>{" "}
-          to generate
+      <div className="mx-auto max-w-3xl text-center sm:text-left">
+        <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-white/40">
+          AI Prompt Studio
         </p>
+        <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+          Center stage for every idea
+        </h2>
+        <p className="mt-2 text-sm text-white/50 sm:text-base">
+          A cinematic prompt workspace with model control, craft settings, and
+          one-click generation.
+        </p>
+      </div>
 
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <Button
-            type="button"
-            size="lg"
+      <div className="mx-auto w-full max-w-3xl space-y-7">
+        <PromptEditor
+          value={prompt}
+          onChange={setPrompt}
+          referenceName={referenceName}
+          onReferenceChange={setReferenceName}
+          promptHistory={promptHistory}
+          onSelectHistoryPrompt={setPrompt}
+          focused={focused}
+          onFocusedChange={setFocused}
+          onSubmit={handleGenerate}
+        />
+
+        <div className="border-t border-white/8 pt-6">
+          <ModelSelector value={providerId} onChange={setProviderId} />
+        </div>
+
+        <div className="border-t border-white/8 pt-6">
+          <GenerationSettings value={settings} onChange={setSettings} />
+        </div>
+
+        <div className="flex flex-col gap-4 border-t border-white/8 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-white/35">
+            <kbd className="rounded border border-white/10 bg-white/[0.04] px-1.5 py-0.5">
+              ⌘
+            </kbd>{" "}
+            +{" "}
+            <kbd className="rounded border border-white/10 bg-white/[0.04] px-1.5 py-0.5">
+              Enter
+            </kbd>{" "}
+            to generate
+          </p>
+
+          <GenerateButton
             onClick={handleGenerate}
             disabled={!prompt.trim() || isGenerating}
-            className="relative h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-neon-blue via-[#7a6cff] to-neon-purple px-6 text-sm font-semibold text-white shadow-[0_16px_48px_oklch(0.55_0.18_275/0.5)] hover:opacity-95 disabled:opacity-45 sm:w-auto"
-          >
-            <span className="pointer-events-none absolute inset-0 animate-shimmer bg-[linear-gradient(120deg,transparent,oklch(1_0_0/0.25),transparent)]" />
-            <AnimatePresence mode="wait" initial={false}>
-              {isGenerating ? (
-                <motion.span
-                  key="loading"
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  className="relative inline-flex items-center gap-2"
-                >
-                  <Loader2 className="size-4 animate-spin" />
-                  Generating…
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="idle"
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  className="relative inline-flex items-center gap-2"
-                >
-                  <Sparkles className="size-4" />
-                  Generate
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </Button>
-        </motion.div>
+            isGenerating={isGenerating}
+          />
+        </div>
       </div>
     </GlassPanel>
   );
