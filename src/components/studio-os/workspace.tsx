@@ -35,6 +35,12 @@ export function Workspace() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isGenerating) return;
+    if (progress >= 70) setStatus("refining");
+    else if (progress > 30) setStatus("generating");
+  }, [progress, isGenerating]);
+
   const handleGenerate = (payload: GenerationPayload) => {
     if (timerRef.current) window.clearTimeout(timerRef.current);
     if (progressRef.current) window.clearInterval(progressRef.current);
@@ -50,12 +56,7 @@ export function Workspace() {
     setToolLabel(payload.toolLabel);
 
     progressRef.current = window.setInterval(() => {
-      setProgress((value) => {
-        const next = value >= 92 ? value : value + Math.random() * 10 + 4;
-        if (next > 30 && next < 70) setStatus("generating");
-        if (next >= 70) setStatus("refining");
-        return next;
-      });
+      setProgress((value) => (value >= 92 ? value : value + Math.random() * 10 + 4));
     }, 180);
 
     timerRef.current = window.setTimeout(() => {
