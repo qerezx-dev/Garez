@@ -1,20 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Bell, Coins, Command, Menu, Search } from "lucide-react";
+import { Bell, Command, Menu, Plus, Search } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Tooltip,
@@ -29,16 +19,16 @@ type TopNavProps = {
 export function TopNav({ onMenuOpen }: TopNavProps) {
   return (
     <motion.header
-      initial={{ opacity: 0, y: -12 }}
+      initial={{ opacity: 0, y: -14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       className="sticky top-3 z-30 px-3 sm:px-4 lg:px-5"
     >
-      <div className="glass-float flex items-center gap-3 rounded-[24px] px-3 py-2.5 sm:px-4">
+      <div className="glass-float mx-auto flex max-w-5xl items-center gap-3 rounded-full px-3 py-2 sm:px-4">
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-xl text-white/80 hover:bg-white/8 hover:text-white lg:hidden"
+          className="rounded-full text-white/80 hover:bg-white/8 lg:hidden"
           onClick={onMenuOpen}
           aria-label="Open navigation"
         >
@@ -49,40 +39,25 @@ export function TopNav({ onMenuOpen }: TopNavProps) {
           <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-white/35" />
           <Input
             type="search"
-            placeholder="Search prompts, tools, and assets…"
-            className="h-11 w-full rounded-2xl border-white/10 bg-white/[0.035] pl-11 pr-16 text-sm text-white placeholder:text-white/35 focus-visible:border-neon-blue/45 focus-visible:ring-neon-blue/20"
+            placeholder="Search anything..."
+            className="h-10 w-full rounded-full border-transparent bg-transparent pl-11 pr-16 text-sm text-white placeholder:text-white/35 focus-visible:border-white/10 focus-visible:bg-white/[0.03] focus-visible:ring-0"
           />
-          <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-1 rounded-lg border border-white/10 bg-white/[0.04] px-2 py-1 text-[11px] text-white/40 sm:flex">
+          <div className="pointer-events-none absolute top-1/2 right-2 hidden -translate-y-1/2 items-center gap-1 rounded-lg border border-white/10 bg-white/[0.04] px-2 py-1 text-[11px] text-white/40 sm:flex">
             <Command className="size-3" />
             <span>K</span>
           </div>
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-2">
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="hidden h-10 rounded-xl border-white/12 bg-white/[0.04] text-white hover:bg-white/[0.08] sm:inline-flex"
-                />
-              }
-            >
-              <Coins data-icon="inline-start" className="text-neon-cyan" />
-              <span className="font-medium tabular-nums">1,240</span>
-              <span className="text-white/40">credits</span>
-            </TooltipTrigger>
-            <TooltipContent>Studio credits remaining</TooltipContent>
-          </Tooltip>
-
-          <Badge
-            variant="secondary"
-            className="h-9 border border-white/10 bg-white/[0.04] px-2.5 text-white sm:hidden"
+          <Button
+            variant="outline"
+            size="sm"
+            className="hidden h-9 rounded-full border-white/12 bg-white/[0.04] text-white hover:bg-white/[0.08] sm:inline-flex"
           >
-            <Coins className="size-3.5 text-neon-cyan" />
-            1,240
-          </Badge>
+            <span className="tabular-nums">12,450</span>
+            <span className="text-white/40">Credits</span>
+            <Plus data-icon="inline-end" className="size-3.5 text-white/60" />
+          </Button>
 
           <Tooltip>
             <TooltipTrigger
@@ -90,51 +65,24 @@ export function TopNav({ onMenuOpen }: TopNavProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="relative size-10 rounded-xl text-white/80 hover:bg-white/8 hover:text-white"
+                  className="relative size-9 rounded-full text-white/80 hover:bg-white/8"
                   aria-label="Notifications"
                 />
               }
             >
-              <Bell />
-              <span className="absolute top-2 right-2 size-2 rounded-full bg-neon-purple shadow-[0_0_12px_oklch(0.7_0.2_300)]" />
+              <Bell className="size-4" />
+              <span className="absolute -top-0.5 -right-0.5 grid size-4 place-items-center rounded-full bg-rose-500 text-[9px] font-semibold text-white shadow-[0_0_12px_oklch(0.65_0.2_25)]">
+                3
+              </span>
             </TooltipTrigger>
             <TooltipContent>3 new notifications</TooltipContent>
           </Tooltip>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <Button
-                  variant="ghost"
-                  className="h-11 gap-2.5 rounded-2xl px-1.5 hover:bg-white/8 sm:px-2"
-                />
-              }
-            >
-              <Avatar size="default" className="ring-1 ring-white/15">
-                <AvatarFallback className="bg-gradient-to-br from-neon-blue to-neon-purple text-[11px] font-semibold text-white">
-                  NS
-                </AvatarFallback>
-              </Avatar>
-              <span className="hidden text-left md:block">
-                <span className="block text-xs font-medium text-white">
-                  Nora Sato
-                </span>
-                <span className="block text-[11px] text-white/40">
-                  Creative Lead
-                </span>
-              </span>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-52">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Account</DropdownMenuLabel>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Preferences</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Sign out</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Avatar size="default" className="ring-2 ring-white/10">
+            <AvatarFallback className="bg-gradient-to-br from-[#3b82f6] to-[#a855f7] text-[11px] font-semibold text-white">
+              Q
+            </AvatarFallback>
+          </Avatar>
         </div>
       </div>
     </motion.header>

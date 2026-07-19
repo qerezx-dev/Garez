@@ -1,17 +1,19 @@
 import {
+  Boxes,
   Bot,
   Code2,
-  Compass,
   FileText,
   Film,
-  History,
+  FolderKanban,
   ImageIcon,
   LayoutDashboard,
-  MessageSquareText,
   Mic2,
   Music2,
   Palette,
-  Sparkles,
+  Settings,
+  Users,
+  Waypoints,
+  Workflow,
   type LucideIcon,
 } from "lucide-react";
 
@@ -28,6 +30,7 @@ export type AiTool = {
   description: string;
   icon: LucideIcon;
   accent: string;
+  iconBg: string;
   glow: string;
   tag: string;
 };
@@ -35,7 +38,7 @@ export type AiTool = {
 export type Creation = {
   id: string;
   prompt: string;
-  mode: "image" | "video";
+  mode: "image" | "video" | "music" | "code";
   model: string;
   aspect: string;
   quality: string;
@@ -43,6 +46,8 @@ export type Creation = {
   seed: string;
   outputCount: number;
   createdAt: string;
+  duration?: string;
+  gradient: string;
 };
 
 export type OptionItem = {
@@ -50,154 +55,119 @@ export type OptionItem = {
   label: string;
 };
 
-export type AiProvider = {
-  id: string;
-  name: string;
-  description: string;
-  initials: string;
-  accent: string;
-  status: "ready" | "coming-soon";
-};
-
-export type PromptTemplate = {
-  id: string;
-  label: string;
-  prompt: string;
-};
-
 export const NAV_ITEMS: NavItem[] = [
-  { label: "Studio", href: "#", icon: LayoutDashboard, active: true },
-  { label: "Create", href: "#create", icon: Sparkles },
-  { label: "Explore", href: "#tools", icon: Compass },
+  { label: "Studio", href: "#create", icon: LayoutDashboard, active: true },
+  { label: "Projects", href: "#", icon: FolderKanban },
   { label: "Assets", href: "#preview", icon: ImageIcon },
-  { label: "History", href: "#history", icon: History },
-  { label: "Chat", href: "#", icon: MessageSquareText },
+  { label: "Workflows", href: "#", icon: Workflow },
+  { label: "Models", href: "#", icon: Boxes },
+  { label: "Community", href: "#", icon: Users },
+  { label: "API", href: "#", icon: Waypoints },
+  { label: "Settings", href: "#", icon: Settings },
 ];
 
 export const AI_TOOLS: AiTool[] = [
   {
-    id: "image",
-    title: "AI Image",
-    description: "Cinematic stills, product heroes, and brand-ready visuals.",
-    icon: ImageIcon,
-    accent: "from-sky-300/55 via-blue-500/25 to-indigo-600/10",
-    glow: "group-hover:shadow-[0_0_48px_oklch(0.7_0.16_250/0.35)]",
-    tag: "Visual",
-  },
-  {
     id: "video",
     title: "AI Video",
-    description: "Short-form motion with lighting-aware scene control.",
+    description: "Cinematic clips with lighting-aware motion control.",
     icon: Film,
-    accent: "from-fuchsia-300/50 via-violet-500/30 to-purple-700/10",
-    glow: "group-hover:shadow-[0_0_48px_oklch(0.68_0.2_300/0.35)]",
+    accent: "from-violet-400/50 via-fuchsia-500/25 to-transparent",
+    iconBg: "from-violet-500 to-fuchsia-600",
+    glow: "group-hover:shadow-[0_0_50px_oklch(0.65_0.2_300/0.35)]",
     tag: "Motion",
+  },
+  {
+    id: "image",
+    title: "AI Image",
+    description: "Photoreal heroes, brand stills, and concept art.",
+    icon: ImageIcon,
+    accent: "from-sky-400/50 via-blue-500/25 to-transparent",
+    iconBg: "from-sky-500 to-blue-600",
+    glow: "group-hover:shadow-[0_0_50px_oklch(0.7_0.16_250/0.35)]",
+    tag: "Visual",
   },
   {
     id: "music",
     title: "AI Music",
-    description: "Scores, beds, and sonic identities matched to your mood.",
+    description: "Scores and sonic identities matched to mood.",
     icon: Music2,
-    accent: "from-cyan-300/50 via-teal-400/25 to-indigo-500/10",
-    glow: "group-hover:shadow-[0_0_48px_oklch(0.78_0.13_220/0.3)]",
+    accent: "from-pink-400/45 via-rose-500/25 to-transparent",
+    iconBg: "from-pink-500 to-rose-600",
+    glow: "group-hover:shadow-[0_0_50px_oklch(0.7_0.18_350/0.32)]",
     tag: "Audio",
   },
   {
     id: "voice",
     title: "AI Voice",
-    description: "Natural narration with emotion, pacing, and tone control.",
+    description: "Expressive narration with natural pacing.",
     icon: Mic2,
-    accent: "from-rose-300/45 via-purple-400/25 to-blue-500/10",
-    glow: "group-hover:shadow-[0_0_48px_oklch(0.7_0.18_280/0.3)]",
+    accent: "from-emerald-400/45 via-teal-500/25 to-transparent",
+    iconBg: "from-emerald-500 to-teal-600",
+    glow: "group-hover:shadow-[0_0_50px_oklch(0.72_0.14_160/0.32)]",
     tag: "Speech",
   },
   {
     id: "code",
     title: "AI Code",
-    description: "Production-minded snippets, refactors, and UI systems.",
+    description: "Production-minded systems and UI snippets.",
     icon: Code2,
-    accent: "from-emerald-300/45 via-sky-400/25 to-indigo-500/10",
-    glow: "group-hover:shadow-[0_0_48px_oklch(0.72_0.15_170/0.3)]",
+    accent: "from-cyan-400/45 via-teal-500/20 to-transparent",
+    iconBg: "from-cyan-500 to-teal-600",
+    glow: "group-hover:shadow-[0_0_50px_oklch(0.75_0.12_200/0.3)]",
     tag: "Build",
-  },
-  {
-    id: "agent",
-    title: "AI Agent",
-    description: "Multi-step creative operators that plan and execute.",
-    icon: Bot,
-    accent: "from-amber-300/40 via-fuchsia-400/25 to-violet-600/10",
-    glow: "group-hover:shadow-[0_0_48px_oklch(0.68_0.2_300/0.32)]",
-    tag: "Ops",
-  },
-  {
-    id: "design",
-    title: "AI Design",
-    description: "Layouts, art direction, and cohesive visual systems.",
-    icon: Palette,
-    accent: "from-violet-300/50 via-pink-400/20 to-blue-500/10",
-    glow: "group-hover:shadow-[0_0_48px_oklch(0.7_0.17_300/0.3)]",
-    tag: "Look",
   },
   {
     id: "documents",
     title: "AI Documents",
-    description: "Briefs, scripts, proposals, and polished long-form copy.",
+    description: "Briefs, scripts, and polished long-form copy.",
     icon: FileText,
-    accent: "from-lime-300/35 via-cyan-400/20 to-indigo-500/10",
-    glow: "group-hover:shadow-[0_0_48px_oklch(0.76_0.12_160/0.28)]",
+    accent: "from-orange-400/45 via-amber-500/20 to-transparent",
+    iconBg: "from-orange-500 to-amber-600",
+    glow: "group-hover:shadow-[0_0_50px_oklch(0.75_0.14_60/0.3)]",
     tag: "Write",
+  },
+  {
+    id: "design",
+    title: "AI Design",
+    description: "Layouts, art direction, and visual systems.",
+    icon: Palette,
+    accent: "from-indigo-400/45 via-violet-500/25 to-transparent",
+    iconBg: "from-indigo-500 to-violet-600",
+    glow: "group-hover:shadow-[0_0_50px_oklch(0.68_0.18_285/0.32)]",
+    tag: "Look",
+  },
+  {
+    id: "agent",
+    title: "AI Agent",
+    description: "Multi-step operators that plan and execute.",
+    icon: Bot,
+    accent: "from-slate-300/35 via-cyan-500/20 to-transparent",
+    iconBg: "from-slate-500 to-cyan-700",
+    glow: "group-hover:shadow-[0_0_50px_oklch(0.7_0.1_220/0.28)]",
+    tag: "Ops",
   },
 ];
 
-export const AI_PROVIDERS: AiProvider[] = [
-  {
-    id: "openai",
-    name: "OpenAI",
-    description: "Flagship multimodal models for image and text systems.",
-    initials: "OA",
-    accent: "from-emerald-400/40 to-teal-500/20",
-    status: "coming-soon",
-  },
-  {
-    id: "gemini",
-    name: "Google Gemini",
-    description: "High-context generation with strong visual reasoning.",
-    initials: "GG",
-    accent: "from-sky-400/40 to-blue-500/20",
-    status: "coming-soon",
-  },
-  {
-    id: "claude",
-    name: "Claude",
-    description: "Precise creative direction and structured prompt craft.",
-    initials: "CL",
-    accent: "from-orange-300/35 to-amber-500/20",
-    status: "coming-soon",
-  },
-  {
-    id: "stability",
-    name: "Stability AI",
-    description: "Diffusion-native image models for studio-grade stills.",
-    initials: "ST",
-    accent: "from-violet-400/40 to-fuchsia-500/20",
-    status: "coming-soon",
-  },
-  {
-    id: "fal",
-    name: "Fal AI",
-    description: "Fast inference endpoints for iterative creative loops.",
-    initials: "FA",
-    accent: "from-indigo-400/40 to-cyan-500/20",
-    status: "coming-soon",
-  },
-  {
-    id: "elevenlabs",
-    name: "ElevenLabs",
-    description: "Premium voice synthesis with expressive performance.",
-    initials: "EL",
-    accent: "from-rose-300/35 to-purple-500/20",
-    status: "coming-soon",
-  },
+export const MEDIA_TYPES: OptionItem[] = [
+  { value: "image", label: "Image" },
+  { value: "video", label: "Video" },
+  { value: "music", label: "Music" },
+  { value: "code", label: "Code" },
+];
+
+export const STYLES: OptionItem[] = [
+  { value: "cinematic", label: "Cinematic" },
+  { value: "editorial", label: "Editorial" },
+  { value: "product", label: "Product" },
+  { value: "noir", label: "Noir" },
+];
+
+export const PROMPT_SUGGESTIONS = [
+  "Cyberpunk city",
+  "Ocean sunset",
+  "Fantasy castle",
+  "Product photo",
 ];
 
 export const ASPECT_RATIOS: OptionItem[] = [
@@ -221,74 +191,81 @@ export const OUTPUT_COUNTS: OptionItem[] = [
   { value: "4", label: "4" },
 ];
 
-export const PROMPT_TEMPLATES: PromptTemplate[] = [
+export const AI_PROVIDERS = [
   {
-    id: "product",
-    label: "Product Hero",
-    prompt:
-      "Minimal product hero of a titanium wireless earbud on matte black stone, soft cyan rim light, ultra-clean luxury advertising composition",
-  },
-  {
-    id: "cinematic",
-    label: "Cinematic Scene",
-    prompt:
-      "A glass pavilion floating above neon clouds at dusk, volumetric god rays, cinematic widescreen framing, ultra-detailed atmosphere",
-  },
-  {
-    id: "portrait",
-    label: "Editorial Portrait",
-    prompt:
-      "Editorial portrait with soft cyan rim light, shallow depth of field, premium fashion lighting, quiet luxury color grade",
-  },
-  {
-    id: "packaging",
-    label: "Packaging",
-    prompt:
-      "Luxury packaging for a violet perfume bottle, reflective glass, soft studio gradients, high-end commercial still life",
+    id: "noro",
+    name: "NORO Cinema",
+    description: "Studio-native cinematic model.",
+    initials: "NO",
+    accent: "from-violet-400/40 to-blue-500/20",
+    status: "ready" as const,
   },
 ];
 
+export const PROMPT_TEMPLATES = PROMPT_SUGGESTIONS.map((label, index) => ({
+  id: `t${index}`,
+  label,
+  prompt: label,
+}));
+
 export const SEED_PROMPT_HISTORY = [
-  "Orbital lounge with aurora glass walls",
-  "Slow dolly through a neon mist corridor",
-  "Titanium earbud on black velvet, soft rim light",
+  "Neon cyberpunk coupe on wet asphalt",
+  "Moonlit fantasy castle above clouds",
+  "Astronaut drifting through aurora dust",
 ];
 
 export const SEED_HISTORY: Creation[] = [
   {
     id: "c1",
-    prompt: "Orbital lounge with aurora glass walls",
-    mode: "image",
-    model: "Stability AI",
+    prompt: "Neon cyberpunk coupe on wet asphalt",
+    mode: "video",
+    model: "NORO Cinema",
     aspect: "16:9",
     quality: "Ultra",
     creativity: 72,
     seed: "48291",
     outputCount: 1,
     createdAt: "2m ago",
+    duration: "00:10",
+    gradient: "from-[#1a0b2e] via-[#3b0764] to-[#0ea5e9]",
   },
   {
     id: "c2",
-    prompt: "Slow dolly through a neon mist corridor",
-    mode: "video",
-    model: "Fal AI",
-    aspect: "9:16",
-    quality: "High",
-    creativity: 64,
+    prompt: "Moonlit fantasy castle above clouds",
+    mode: "image",
+    model: "NORO Prime",
+    aspect: "16:9",
+    quality: "Ultra",
+    creativity: 68,
     seed: "11902",
-    outputCount: 2,
+    outputCount: 1,
     createdAt: "18m ago",
+    gradient: "from-[#0f172a] via-[#312e81] to-[#7c3aed]",
   },
   {
     id: "c3",
-    prompt: "Titanium earbud on black velvet, soft rim light",
+    prompt: "Astronaut drifting through aurora dust",
     mode: "image",
-    model: "OpenAI",
+    model: "NORO Ultra",
     aspect: "1:1",
-    quality: "Ultra",
-    creativity: 48,
+    quality: "High",
+    creativity: 80,
     seed: "77410",
     outputCount: 1,
     createdAt: "1h ago",
+    gradient: "from-[#082f49] via-[#1e3a8a] to-[#db2777]",
+  },
+  {
+    id: "c4",
+    prompt: "Abstract luminous wave forms",
+    mode: "image",
+    model: "NORO Swift",
+    aspect: "16:9",
+    quality: "High",
+    creativity: 55,
+    seed: "22011",
+    outputCount: 1,
+    createdAt: "3h ago",
+    gradient: "from-[#083344] via-[#0e7490] to-[#a21caf]",
   },
 ];

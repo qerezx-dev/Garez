@@ -1,15 +1,8 @@
 export type GenerationPayload = {
   prompt: string;
-  negativePrompt: string;
-  providerId: string;
-  providerName: string;
-  aspect: string;
-  quality: string;
-  creativity: number;
-  seed: string;
-  outputCount: number;
+  mediaType: "image" | "video" | "music" | "code";
+  style: string;
   hasReference: boolean;
-  mode: "image" | "video";
 };
 
 export type GenerationStatus =

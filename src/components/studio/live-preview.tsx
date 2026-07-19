@@ -1,57 +1,38 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  Clapperboard,
-  ImageIcon,
-  Maximize2,
-  Play,
-  RefreshCw,
-} from "lucide-react";
+import { Play } from "lucide-react";
 
 import { GlassPanel } from "@/components/studio/glass-panel";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import type { GenerationStatus } from "@/lib/generation";
+import type { Creation } from "@/lib/studio-data";
+import { MEDIA_TYPES } from "@/lib/studio-data";
 import { cn } from "@/lib/utils";
 
 type LivePreviewProps = {
   prompt: string;
-  model: string;
-  aspect: string;
-  quality: string;
-  creativity: number;
-  seed: string;
-  outputCount: number;
+  mediaType: "image" | "video" | "music" | "code";
   isGenerating: boolean;
   progress: number;
   status: GenerationStatus;
-  mode?: "image" | "video";
-};
-
-const STATUS_COPY: Record<GenerationStatus, string> = {
-  idle: "Waiting for prompt",
-  queued: "Queued in studio pipeline",
-  generating: "Composing visual structure",
-  refining: "Refining detail and lighting",
-  complete: "Generation complete",
-  error: "Generation failed",
+  history: Creation[];
+  onSelectHistory: (item: Creation) => void;
+  onMediaTypeChange: (type: "image" | "video" | "music" | "code") => void;
 };
 
 export function LivePreview({
   prompt,
-  model,
-  aspect,
-  quality,
-  creativity,
-  seed,
-  outputCount,
+  mediaType,
   isGenerating,
   progress,
   status,
-  mode = "image",
+  history,
+  onSelectHistory,
+  onMediaTypeChange,
 }: LivePreviewProps) {
   const hasPrompt = prompt.trim().length > 0;
+  const active = history[0];
 
   return (
     <GlassPanel
@@ -59,234 +40,139 @@ export function LivePreview({
       strong
       glow
       framed
-      className="flex h-full min-h-[520px] flex-col lg:min-h-[720px]"
+      className="flex h-full min-h-[480px] flex-col p-4 sm:min-h-[560px] sm:p-5"
     >
-      <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
+      <div className="mb-4 flex items-center justify-between gap-3">
         <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
+          <p className="font-display text-lg font-semibold text-white">
             Live Preview
           </p>
-          <p className="mt-1 text-sm font-medium text-white">
-            Image & video canvas
-          </p>
         </div>
-        <div className="flex items-center gap-1.5">
-          <Badge
+        <Badge
+          className={cn(
+            "border",
+            isGenerating
+              ? "border-sky-400/25 bg-sky-400/10 text-sky-100"
+              : "border-white/10 bg-white/5 text-white/60"
+          )}
+        >
+          <span
             className={cn(
-              "border",
+              "mr-1.5 size-1.5 rounded-full",
               isGenerating
-                ? "border-amber-300/20 bg-amber-300/10 text-amber-100"
-                : hasPrompt
-                  ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-100"
-                  : "border-white/10 bg-white/5 text-white/60"
+                ? "animate-pulse bg-sky-300 shadow-[0_0_10px_oklch(0.8_0.14_230)]"
+                : "bg-white/40"
             )}
-          >
-            <span
-              className={cn(
-                "mr-1.5 size-1.5 rounded-full",
-                isGenerating
-                  ? "bg-amber-300 shadow-[0_0_8px_oklch(0.85_0.15_90)]"
-                  : hasPrompt
-                    ? "bg-emerald-300 shadow-[0_0_8px_oklch(0.8_0.17_150)]"
-                    : "bg-white/40"
-              )}
-            />
-            {isGenerating ? "Rendering" : hasPrompt ? "Ready" : "Idle"}
-          </Badge>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            className="rounded-xl text-white/60 hover:bg-white/8 hover:text-white"
-            aria-label="Refresh preview"
-          >
-            <RefreshCw />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            className="rounded-xl text-white/60 hover:bg-white/8 hover:text-white"
-            aria-label="Expand preview"
-          >
-            <Maximize2 />
-          </Button>
-        </div>
+          />
+          {isGenerating ? "Generating..." : status === "complete" ? "Ready" : "Idle"}
+        </Badge>
       </div>
 
-      <div className="relative flex flex-1 items-center justify-center overflow-hidden p-5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,oklch(0.55_0.18_255/0.22),transparent_42%),radial-gradient(circle_at_75%_75%,oklch(0.5_0.2_300/0.2),transparent_48%)]" />
-        <div className="absolute inset-0 soft-grid opacity-35" />
-
+      <div className="relative overflow-hidden rounded-[24px] border border-white/10 bg-[#080a14]">
         <AnimatePresence mode="wait">
-          {isGenerating ? (
-            <motion.div
-              key="generating"
-              initial={{ opacity: 0, scale: 0.96, filter: "blur(8px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 1.02, filter: "blur(6px)" }}
-              className="relative z-10 flex w-full max-w-md flex-col items-center gap-5 text-center"
-            >
-              <div className="relative size-36">
+          <motion.div
+            key={hasPrompt ? prompt : "empty"}
+            initial={{ opacity: 0, scale: 1.02 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.45 }}
+            className={cn(
+              "relative aspect-[16/11] w-full",
+              active?.gradient
+                ? `bg-gradient-to-br ${active.gradient}`
+                : "bg-gradient-to-br from-[#1a0b2e] via-[#312e81] to-[#0ea5e9]"
+            )}
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,oklch(1_0_0/0.15),transparent_35%),radial-gradient(circle_at_70%_80%,oklch(0.7_0.2_300/0.25),transparent_40%)]" />
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/55 to-transparent" />
+
+            {/* Mock cyberpunk scene elements */}
+            <div className="absolute inset-x-[12%] bottom-[18%] h-[34%] rounded-[40%] bg-black/35 blur-md" />
+            <div className="absolute left-1/2 bottom-[22%] h-[22%] w-[55%] -translate-x-1/2 rounded-[2rem] bg-gradient-to-r from-[#22d3ee]/50 via-[#a855f7]/70 to-[#f472b6]/50 blur-[1px]" />
+            <div className="absolute left-1/2 bottom-[28%] h-8 w-[48%] -translate-x-1/2 rounded-full bg-[#0ea5e9]/40 blur-lg" />
+
+            {(mediaType === "video" || isGenerating) && (
+              <div className="absolute inset-0 grid place-items-center">
                 <motion.div
-                  className="absolute inset-0 rounded-full border border-neon-blue/35"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                />
-                <motion.div
-                  className="absolute inset-4 rounded-full border border-dashed border-neon-purple/45"
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
-                />
-                <motion.div
-                  className="absolute inset-9 rounded-3xl bg-gradient-to-br from-neon-blue/45 to-neon-purple/45"
-                  animate={{ opacity: [0.45, 1, 0.45], scale: [0.94, 1.06, 0.94] }}
-                  transition={{ duration: 2.2, repeat: Infinity }}
-                />
-                <div className="absolute inset-0 grid place-items-center">
-                  <ImageIcon className="size-6 text-white" />
-                </div>
-              </div>
-              <div className="w-full space-y-3">
-                <div>
-                  <p className="font-display text-xl font-semibold text-white">
-                    Generating preview
-                  </p>
-                  <p className="mt-1 text-sm text-white/55">
-                    {STATUS_COPY[status]}
-                  </p>
-                </div>
-                <div className="w-full space-y-2 text-left">
-                  <div className="flex items-center justify-between text-xs text-white/50">
-                    <span>Generation progress</span>
-                    <span className="tabular-nums text-white/80">
-                      {Math.round(Math.min(progress, 100))}%
-                    </span>
-                  </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-                    <motion.div
-                      className="h-full rounded-full bg-gradient-to-r from-neon-cyan via-neon-blue to-neon-purple"
-                      initial={{ width: "0%" }}
-                      animate={{ width: `${Math.min(progress, 100)}%` }}
-                      transition={{ ease: "easeOut", duration: 0.25 }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ) : hasPrompt ? (
-            <motion.div
-              key={prompt}
-              initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-10 w-full max-w-xl"
-            >
-              <div className="overflow-hidden rounded-[28px] border border-white/12 bg-[#0b1020]/88 shadow-[0_40px_100px_oklch(0.16_0.08_275/0.55)]">
-                <div
-                  className={cn(
-                    "relative bg-gradient-to-br from-[#1a2758] via-[#2c184d] to-[#0c1b2c] p-6",
-                    aspectClass(aspect)
-                  )}
+                  whileHover={{ scale: 1.06 }}
+                  className="grid size-14 place-items-center rounded-full border border-white/20 bg-black/35 text-white shadow-[0_0_40px_oklch(0.65_0.16_280/0.35)] backdrop-blur-md"
                 >
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,oklch(0.8_0.12_220/0.22),transparent_40%),radial-gradient(circle_at_80%_70%,oklch(0.7_0.18_300/0.24),transparent_45%)]" />
-                  <div className="relative flex h-full min-h-[260px] flex-col justify-between">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex flex-wrap gap-1.5">
-                        <Badge
-                          variant="secondary"
-                          className="border border-white/10 bg-black/30 text-white/80"
-                        >
-                          {mode === "video" ? "Video Preview" : "Image Preview"}
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="border border-white/10 bg-black/30 text-white/70"
-                        >
-                          {aspect}
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="border border-white/10 bg-black/30 text-white/70"
-                        >
-                          ×{outputCount}
-                        </Badge>
-                      </div>
-                      {mode === "video" && (
-                        <Button
-                          size="icon-sm"
-                          variant="ghost"
-                          className="rounded-full bg-white/10 text-white hover:bg-white/20"
-                          aria-label="Play preview"
-                        >
-                          <Play className="size-3.5 fill-current" />
-                        </Button>
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-display text-2xl font-semibold tracking-tight text-white text-balance">
-                        {prompt}
-                      </p>
-                      <p className="mt-2 text-sm text-white/55">
-                        {model} · {quality} · Creativity {creativity} · Seed{" "}
-                        {seed}
-                      </p>
-                    </div>
-                  </div>
+                  <Play className="size-5 fill-current" />
+                </motion.div>
+              </div>
+            )}
+
+            {isGenerating && (
+              <div className="absolute inset-x-6 bottom-5">
+                <div className="mb-2 flex justify-between text-[11px] text-white/70">
+                  <span>Rendering frame</span>
+                  <span>{Math.round(Math.min(progress, 100))}%</span>
+                </div>
+                <div className="h-1 overflow-hidden rounded-full bg-white/15">
+                  <motion.div
+                    className="h-full rounded-full bg-gradient-to-r from-[#3b82f6] to-[#a855f7]"
+                    animate={{ width: `${Math.min(progress, 100)}%` }}
+                  />
                 </div>
               </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0, filter: "blur(6px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0 }}
-              className="relative z-10 max-w-sm text-center"
-            >
-              <div className="mx-auto mb-4 grid size-16 place-items-center rounded-2xl border border-white/10 bg-white/[0.04]">
-                <Clapperboard className="size-5 text-neon-cyan" />
+            )}
+
+            {!isGenerating && hasPrompt && (
+              <div className="absolute inset-x-5 bottom-4">
+                <p className="line-clamp-2 text-sm font-medium text-white drop-shadow">
+                  {prompt}
+                </p>
               </div>
-              <p className="font-display text-xl font-semibold text-white">
-                Your canvas awaits
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-white/50">
-                Generate from the Prompt Studio to stream a cinematic image or
-                video preview here.
-              </p>
-            </motion.div>
-          )}
+            )}
+          </motion.div>
         </AnimatePresence>
       </div>
 
-      <div className="border-t border-white/8 px-5 py-4">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
-              Generation Status
-            </p>
-            <p className="mt-1 text-sm text-white/75">{STATUS_COPY[status]}</p>
-          </div>
-          <p className="text-xs tabular-nums text-white/40">
-            {Math.round(Math.min(progress, 100))}%
-          </p>
+      <div className="mt-4 grid grid-cols-4 gap-2">
+        {MEDIA_TYPES.map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            onClick={() =>
+              onMediaTypeChange(item.value as typeof mediaType)
+            }
+            className={cn(
+              "rounded-2xl border px-2 py-2.5 text-xs font-medium transition",
+              mediaType === item.value
+                ? "border-violet-400/35 bg-white/[0.08] text-white shadow-[0_0_24px_oklch(0.65_0.16_280/0.18)]"
+                : "border-white/8 bg-white/[0.03] text-white/55 hover:border-white/15 hover:text-white"
+            )}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-5">
+        <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
+          Recent Generations
+        </p>
+        <div className="grid grid-cols-4 gap-2">
+          {history.slice(0, 4).map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onSelectHistory(item)}
+              className={cn(
+                "group relative aspect-square overflow-hidden rounded-2xl border border-white/10 transition hover:border-white/25",
+                `bg-gradient-to-br ${item.gradient}`
+              )}
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,oklch(1_0_0/0.18),transparent_50%)]" />
+              {item.duration && (
+                <span className="absolute right-1.5 bottom-1.5 rounded-md bg-black/55 px-1.5 py-0.5 text-[9px] text-white/85 backdrop-blur">
+                  {item.duration}
+                </span>
+              )}
+            </button>
+          ))}
         </div>
       </div>
     </GlassPanel>
   );
-}
-
-function aspectClass(aspect: string) {
-  switch (aspect) {
-    case "1:1":
-      return "aspect-square";
-    case "4:5":
-      return "aspect-[4/5]";
-    case "9:16":
-      return "aspect-[9/16] max-h-[420px] mx-auto w-full";
-    case "21:9":
-      return "aspect-[21/9]";
-    case "16:9":
-    default:
-      return "aspect-video";
-  }
 }
