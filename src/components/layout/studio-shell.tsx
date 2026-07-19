@@ -18,7 +18,7 @@ export function StudioShell() {
 
       <div className="relative z-10 flex min-w-0 flex-1 flex-col">
         <TopNav onMenuOpen={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto pb-16">
+        <main className="flex-1 overflow-y-auto pb-20">
           <HeroSection />
         </main>
       </div>
