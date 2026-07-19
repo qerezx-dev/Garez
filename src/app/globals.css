@@ -179,6 +179,53 @@
       0 0 0 1px oklch(0.7 0.1 255 / 0.05);
   }
 
+  .os-glass {
+    background:
+      linear-gradient(160deg, rgba(13, 22, 40, 0.78), rgba(4, 9, 19, 0.72)),
+      radial-gradient(circle at 5% 0%, rgba(59, 130, 246, 0.11), transparent 28%);
+    border: 1px solid rgba(148, 163, 184, 0.13);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 18px 55px rgba(0, 0, 0, 0.36),
+      0 0 50px rgba(30, 64, 175, 0.09);
+    backdrop-filter: blur(32px) saturate(145%);
+    -webkit-backdrop-filter: blur(32px) saturate(145%);
+  }
+
+  .os-panel {
+    background: linear-gradient(160deg, rgba(10, 18, 34, 0.86), rgba(5, 9, 19, 0.82));
+    border: 1px solid rgba(148, 163, 184, 0.13);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.055),
+      0 18px 48px rgba(0, 0, 0, 0.33);
+    backdrop-filter: blur(28px) saturate(145%);
+    -webkit-backdrop-filter: blur(28px) saturate(145%);
+  }
+
+  .os-command {
+    background: linear-gradient(120deg, rgba(168, 85, 247, 0.95), rgba(6, 182, 212, 0.82), rgba(59, 130, 246, 0.95));
+    box-shadow:
+      0 0 0 1px rgba(124, 58, 237, 0.26),
+      0 12px 38px rgba(79, 70, 229, 0.22),
+      0 0 34px rgba(6, 182, 212, 0.12);
+  }
+
+  .os-topbar-search {
+    background: rgba(4, 10, 21, 0.58);
+    border: 1px solid rgba(148, 163, 184, 0.11);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  }
+
+  .os-tool-card {
+    background: linear-gradient(155deg, rgba(14, 24, 42, 0.84), rgba(7, 12, 24, 0.82));
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045), 0 10px 26px rgba(0, 0, 0, 0.2);
+  }
+
+  .os-tool-card:hover {
+    border-color: rgba(148, 163, 184, 0.24);
+  }
+
   .neon-text {
     background: linear-gradient(
       120deg,
