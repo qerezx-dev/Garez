@@ -105,13 +105,13 @@ export function HeroSection() {
         hidden: {},
         show: { transition: { staggerChildren: 0.1 } },
       }}
-      className="mx-auto w-full max-w-[1480px] space-y-10 px-4 py-8 sm:px-6 lg:space-y-14 lg:px-8 lg:py-10"
+      className="mx-auto w-full max-w-[1680px] space-y-12 px-4 py-8 sm:px-6 lg:space-y-16 lg:px-8 lg:py-10"
     >
-      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(340px,0.85fr)] xl:gap-8">
-        <div className="space-y-8 lg:space-y-10">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12 lg:gap-8">
+        <div className="space-y-8 lg:col-span-7 lg:space-y-10 xl:col-span-8">
           <motion.section
             variants={fadeUp}
-            className="mx-auto max-w-3xl pt-4 text-center xl:mx-0 xl:pt-10 xl:text-left"
+            className="mx-auto max-w-4xl pt-4 text-center lg:mx-0 lg:pt-10 lg:text-left"
           >
             <h1 className="font-display text-5xl font-semibold tracking-[-0.05em] text-white sm:text-6xl lg:text-[4.6rem] lg:leading-[0.98]">
               Create Anything with{" "}
@@ -120,7 +120,7 @@ export function HeroSection() {
                 <Sparkles className="size-6 text-sky-300 sm:size-7" />
               </span>
             </h1>
-            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/55 sm:text-lg xl:mx-0">
+            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/55 sm:text-lg lg:mx-0">
               The operating system for imagination — generate images, video,
               music, and agents from one cinematic command surface.
             </p>
@@ -134,7 +134,7 @@ export function HeroSection() {
           </motion.div>
         </div>
 
-        <motion.div variants={fadeUp} className="xl:sticky xl:top-28">
+        <motion.div variants={fadeUp} className="lg:col-span-5 lg:sticky lg:top-28 xl:col-span-4">
           <LivePreview
             prompt={activePrompt}
             mediaType={mediaType}

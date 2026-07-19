@@ -58,12 +58,12 @@ export function CommandCenter({
   };
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-4">
+    <div className="mx-auto w-full max-w-5xl space-y-4">
       <GlassPanel
         strong
         glow
         framed
-        className="overflow-visible p-3 sm:p-4"
+        className="overflow-visible rounded-[28px] p-4 sm:p-5"
       >
         <div className="pointer-events-none absolute inset-x-16 top-0 h-px bg-gradient-to-r from-transparent via-violet-300/70 to-transparent" />
 
@@ -80,12 +80,12 @@ export function CommandCenter({
               handleGenerate();
             }
           }}
-          rows={3}
+          rows={4}
           placeholder="Describe your idea..."
-          className="min-h-[96px] w-full resize-none bg-transparent px-2 py-2 text-base leading-relaxed text-white outline-none placeholder:text-white/35 sm:text-[17px]"
+          className="min-h-[128px] w-full resize-none bg-transparent px-2 py-2 text-base leading-relaxed text-white outline-none placeholder:text-white/35 sm:text-[17px]"
         />
 
-        <div className="mt-2 flex flex-col gap-3 border-t border-white/8 pt-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-3 flex flex-col gap-3 border-t border-white/8 pt-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative">
               <button
@@ -200,7 +200,7 @@ export function CommandCenter({
               type="button"
               onClick={handleGenerate}
               disabled={!prompt.trim() || isGenerating}
-              className="relative h-11 w-full overflow-hidden rounded-full border-0 bg-transparent px-6 text-sm font-semibold text-white sm:w-auto"
+              className="relative h-12 w-full overflow-hidden rounded-2xl border-0 bg-transparent px-7 text-sm font-semibold text-white sm:w-auto"
             >
               <span className="absolute inset-0 animate-gradient-flow bg-[linear-gradient(120deg,#8b5cf6,#6366f1,#3b82f6,#8b5cf6)]" />
               <span className="relative inline-flex items-center gap-2">

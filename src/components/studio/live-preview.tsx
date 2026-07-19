@@ -40,7 +40,7 @@ export function LivePreview({
       strong
       glow
       framed
-      className="flex h-full min-h-[480px] flex-col p-4 sm:min-h-[560px] sm:p-5"
+      className="flex h-full min-h-[500px] flex-col rounded-[28px] p-4 sm:min-h-[590px] sm:p-5"
     >
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
@@ -68,7 +68,7 @@ export function LivePreview({
         </Badge>
       </div>
 
-      <div className="relative overflow-hidden rounded-[24px] border border-white/10 bg-[#080a14]">
+      <div className="relative overflow-hidden rounded-[20px] border border-white/10 bg-[#080a14] shadow-[0_24px_60px_oklch(0.05_0.03_275/0.5)]">
         <AnimatePresence mode="wait">
           <motion.div
             key={hasPrompt ? prompt : "empty"}
@@ -77,7 +77,7 @@ export function LivePreview({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.45 }}
             className={cn(
-              "relative aspect-[16/11] w-full",
+              "relative aspect-video w-full",
               active?.gradient
                 ? `bg-gradient-to-br ${active.gradient}`
                 : "bg-gradient-to-br from-[#1a0b2e] via-[#312e81] to-[#0ea5e9]"

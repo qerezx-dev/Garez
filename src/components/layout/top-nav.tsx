@@ -24,7 +24,7 @@ export function TopNav({ onMenuOpen }: TopNavProps) {
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       className="sticky top-3 z-30 px-3 sm:px-4 lg:px-5"
     >
-      <div className="glass-float mx-auto flex max-w-5xl items-center gap-3 rounded-full px-3 py-2 sm:px-4">
+      <div className="glass-float mx-auto flex h-[72px] max-w-5xl items-center gap-3 rounded-[24px] px-3 sm:px-4">
         <Button
           variant="ghost"
           size="icon"
