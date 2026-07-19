@@ -1,5 +1,5 @@
-import { PrismDesktop } from "@/app/_noro/prism-desktop";
+import { StudioDesktopV2 } from "@/components/v2/studio-desktop";
 
 export default function HomePage() {
-  return <PrismDesktop />;
+  return <StudioDesktopV2 />;
 }
