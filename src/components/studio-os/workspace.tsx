@@ -80,11 +80,6 @@ export function Workspace() {
       setActivePrompt(payload.prompt);
       setHistory((items) => [creation, ...items].slice(0, 6));
       setIsGenerating(false);
-
-      window.setTimeout(() => {
-        setProgress(0);
-        setStatus("idle");
-      }, 1000);
     }, 2400);
   };
 
@@ -97,7 +92,7 @@ export function Workspace() {
     setCreativity(item.creativity);
     setToolLabel(item.toolLabel);
     setIsGenerating(false);
-    setProgress(0);
+    setProgress(100);
     setStatus("complete");
   };
 

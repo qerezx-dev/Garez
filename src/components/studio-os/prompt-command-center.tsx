@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -462,30 +463,32 @@ function ModelSelector({
         <ChevronRight className="size-4 rotate-90 text-white/40" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">
-        <DropdownMenuLabel>Model provider</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {AI_PROVIDERS.map((item) => (
-          <DropdownMenuItem
-            key={item.id}
-            onClick={() => onChange(item.id)}
-            className="gap-2.5 py-2"
-          >
-            <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-neon-blue/40 to-neon-purple/35 text-[10px] font-bold text-white">
-              {item.initials}
-            </span>
-            <span className="flex min-w-0 flex-1 flex-col">
-              <span className="flex items-center gap-1.5 text-sm font-medium text-white">
-                {item.name}
-                {providerId === item.id && (
-                  <span className="size-1.5 rounded-full bg-neon-cyan" />
-                )}
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Model provider</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {AI_PROVIDERS.map((item) => (
+            <DropdownMenuItem
+              key={item.id}
+              onClick={() => onChange(item.id)}
+              className="gap-2.5 py-2"
+            >
+              <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-neon-blue/40 to-neon-purple/35 text-[10px] font-bold text-white">
+                {item.initials}
               </span>
-              <span className="truncate text-xs text-white/45">
-                {item.description}
+              <span className="flex min-w-0 flex-1 flex-col">
+                <span className="flex items-center gap-1.5 text-sm font-medium text-white">
+                  {item.name}
+                  {providerId === item.id && (
+                    <span className="size-1.5 rounded-full bg-neon-cyan" />
+                  )}
+                </span>
+                <span className="truncate text-xs text-white/45">
+                  {item.description}
+                </span>
               </span>
-            </span>
-          </DropdownMenuItem>
-        ))}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -520,28 +523,30 @@ function PromptMenu({
         <span className="hidden md:inline">{label}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-72">
-        <DropdownMenuLabel>{heading}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {items.length === 0 ? (
-          <DropdownMenuItem disabled>Nothing yet</DropdownMenuItem>
-        ) : (
-          items.map((item) => (
-            <DropdownMenuItem
-              key={item.key}
-              onClick={() => onSelect(item.value)}
-              className="flex flex-col items-start gap-0.5 py-2"
-            >
-              <span className="text-sm font-medium text-white">
-                {item.title}
-              </span>
-              {item.subtitle && (
-                <span className="line-clamp-2 text-xs text-white/45">
-                  {item.subtitle}
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>{heading}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {items.length === 0 ? (
+            <DropdownMenuItem disabled>Nothing yet</DropdownMenuItem>
+          ) : (
+            items.map((item) => (
+              <DropdownMenuItem
+                key={item.key}
+                onClick={() => onSelect(item.value)}
+                className="flex flex-col items-start gap-0.5 py-2"
+              >
+                <span className="text-sm font-medium text-white">
+                  {item.title}
                 </span>
-              )}
-            </DropdownMenuItem>
-          ))
-        )}
+                {item.subtitle && (
+                  <span className="line-clamp-2 text-xs text-white/45">
+                    {item.subtitle}
+                  </span>
+                )}
+              </DropdownMenuItem>
+            ))
+          )}
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
