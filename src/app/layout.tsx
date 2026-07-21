@@ -1,24 +1,16 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Outfit, Syne } from "next/font/google";
-
-import { AppProviders } from "@/components/providers/app-providers";
+import { DM_Sans, Space_Grotesk } from "next/font/google";
 
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const bodyFont = DM_Sans({
+  variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
 });
 
-const syne = Syne({
-  variable: "--font-syne",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const displayFont = Space_Grotesk({
+  variable: "--font-display",
   subsets: ["latin"],
   display: "swap",
 });
@@ -37,9 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${outfit.variable} ${syne.variable} ${geistMono.variable} antialiased`}
+        className={`${bodyFont.variable} ${displayFont.variable} antialiased`}
       >
-        <AppProviders>{children}</AppProviders>
+        {children}
       </body>
     </html>
   );

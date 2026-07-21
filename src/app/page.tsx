@@ -1,5 +1,5 @@
-import { StudioShell } from "@/components/layout/studio-shell";
+import { StudioDesktopV2 } from "@/components/v2/studio-desktop";
 
 export default function HomePage() {
-  return <StudioShell />;
+  return <StudioDesktopV2 />;
 }
