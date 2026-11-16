@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { 
   LayoutDashboard, Wand2, Video, FileText, Image as ImageIcon, Film, 
@@ -124,7 +125,7 @@ export function StudioShell() {
           {activeTab === 'ai-studio' && (
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
               
-              {/* PROMPT & CONTROLS PANEL (Cols 1-5) */}
+              {/* PROMPT & CONTROLS PANEL */}
               <div className="xl:col-span-5 space-y-4">
                 <div className="p-5 rounded-2xl bg-[#0B0D19] border border-white/10 shadow-2xl backdrop-blur-xl relative">
                   <div className="flex items-center justify-between mb-3">
@@ -199,7 +200,7 @@ export function StudioShell() {
                 </div>
               </div>
 
-              {/* LIVE PREVIEW & TIMELINE (Cols 6-12) */}
+              {/* LIVE PREVIEW & TIMELINE */}
               <div className="xl:col-span-7 space-y-4">
                 <div className="p-4 rounded-2xl bg-[#0B0D19] border border-white/10 shadow-2xl relative overflow-hidden">
                   <div className="flex items-center justify-between mb-3">
