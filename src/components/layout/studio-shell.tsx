@@ -105,9 +105,9 @@ export function StudioShell() {
             <div className="absolute top-0 right-0 w-20 h-20 bg-purple-500/10 rounded-full blur-xl"></div>
             <Crown className="w-6 h-6 text-purple-400 mb-2" />
             <h4 className="font-bold text-sm text-white">NORO PRO</h4>
-            <p className="text-xs text-slate-400 mt-1 mb-3">Sınırsız nesil, öncelikli kuyruk ve premium modeller.</p>
+            <p className="text-xs text-slate-400 mt-1 mb-3">Sinirsiz nesil, oncelikli kuyruk ve premium modeller.</p>
             <button className="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-purple-600/30 transition-all">
-              Pro&apos;ya Yükselt
+              PRO Pakete Gec
             </button>
           </div>
         </aside>
