@@ -2,11 +2,8 @@
 
 import React, { useState } from "react";
 import { 
-  LayoutDashboard, Wand2, Video, FileText, Image as ImageIcon, Film, 
-  Mic, Music, UserCheck, Grid, ShoppingBag, Users, FolderKanban, 
-  LayoutTemplate, Gamepad2, Trophy, Crown, User, CreditCard, Settings as SettingsIcon, 
-  Key, Bell, Globe, Sun, Moon, Search, Cpu, HardDrive, Zap, Play, Pause, 
-  RotateCcw, Download, Maximize2, Sparkles, ChevronRight, Plus, Sliders, CheckCircle2 
+  LayoutDashboard, Wand2, Video, Image as ImageIcon, Music, 
+  ShoppingBag, Users, Crown, Bell, Play, RotateCcw, Sparkles 
 } from "lucide-react";
 
 export function StudioShell() {
@@ -16,7 +13,6 @@ export function StudioShell() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedModel, setSelectedModel] = useState("Noro Cinema XL");
   const [duration, setDuration] = useState("8s");
-  const [aspectRatio, setAspectRatio] = useState("16:9");
 
   const handleGenerate = () => {
     if (credits < 9) return;
@@ -319,4 +315,4 @@ export function StudioShell() {
 
     </div>
   );
- }
+}
