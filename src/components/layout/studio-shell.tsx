@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { 
-  LayoutDashboard, Wand2, Video, Image as ImageIcon, Music, 
-  ShoppingBag, Users, Crown, Bell, Play, RotateCcw, Sparkles 
+  LayoutDashboard, Wand2, Video, Image as ImageIcon, Film, 
+  Music, ShoppingBag, Users, FolderKanban, Gamepad2, Crown, 
+  Bell, Cpu, HardDrive, Play, RotateCcw, Sparkles 
 } from "lucide-react";
 
 export function StudioShell() {
@@ -26,6 +27,7 @@ export function StudioShell() {
   return (
     <div className="min-h-screen bg-[#05060E] text-slate-100 font-sans selection:bg-purple-500 selection:text-white flex flex-col justify-between overflow-x-hidden">
       
+      {/* HEADER */}
       <header className="h-16 border-b border-white/10 bg-[#05060E]/80 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -63,8 +65,10 @@ export function StudioShell() {
         </div>
       </header>
 
+      {/* MAIN CONTAINER */}
       <div className="flex flex-1 overflow-hidden">
         
+        {/* SIDEBAR */}
         <aside className="w-64 border-r border-white/10 bg-[#05060E]/50 backdrop-blur-md p-4 hidden md:flex flex-col justify-between overflow-y-auto">
           <div className="space-y-6">
             <div>
@@ -89,7 +93,7 @@ export function StudioShell() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">Keşfet</p>
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-3">Keşfet & Projeler</p>
               <div className="space-y-1">
                 <button onClick={() => setActiveTab("marketplace")} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${activeTab === 'marketplace' ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}>
                   <ShoppingBag className="w-4 h-4" /> Marketplace
@@ -105,23 +109,25 @@ export function StudioShell() {
             <div className="absolute top-0 right-0 w-20 h-20 bg-purple-500/10 rounded-full blur-xl"></div>
             <Crown className="w-6 h-6 text-purple-400 mb-2" />
             <h4 className="font-bold text-sm text-white">NORO PRO</h4>
-            <p className="text-xs text-slate-400 mt-1 mb-3">Sinirsiz nesil, oncelikli kuyruk ve premium modeller.</p>
+            <p className="text-xs text-slate-400 mt-1 mb-3">Sınırsız nesil, öncelikli kuyruk ve premium modeller.</p>
             <button className="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-purple-600/30 transition-all">
-              PRO Pakete Gec
+              Pro&apos;ya Yükselt
             </button>
           </div>
         </aside>
 
+        {/* CONTENT AREA */}
         <main className="flex-1 p-6 overflow-y-auto space-y-6">
           
           {activeTab === 'ai-studio' && (
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
               
+              {/* LEFT CONTROLS */}
               <div className="xl:col-span-5 space-y-4">
                 <div className="p-5 rounded-2xl bg-[#0B0D19] border border-white/10 shadow-2xl backdrop-blur-xl relative">
                   <div className="flex items-center justify-between mb-3">
                     <label className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-purple-400" /> Prompt
+                      <Sparkles className="w-4 h-4 text-purple-400" /> Prompt & Vizyon
                     </label>
                     <span className="text-xs text-slate-500">{prompt.length} / 2000</span>
                   </div>
@@ -190,6 +196,7 @@ export function StudioShell() {
                 </div>
               </div>
 
+              {/* RIGHT PREVIEW & TIMELINE */}
               <div className="xl:col-span-7 space-y-4">
                 <div className="p-4 rounded-2xl bg-[#0B0D19] border border-white/10 shadow-2xl relative overflow-hidden">
                   <div className="flex items-center justify-between mb-3">
@@ -210,7 +217,7 @@ export function StudioShell() {
 
                   <div className="mt-4 pt-4 border-t border-white/10 space-y-2">
                     <div className="flex justify-between text-xs text-slate-400">
-                      <span>Timeline (0s / 8s)</span>
+                      <span className="flex items-center gap-1"><Film className="w-3.5 h-3.5 text-purple-400" /> Timeline (0s / 8s)</span>
                       <span>4K • 30fps</span>
                     </div>
                     <div className="h-12 bg-[#05060E] rounded-xl border border-white/10 flex items-center px-3 gap-2 relative overflow-hidden">
@@ -231,45 +238,48 @@ export function StudioShell() {
           {activeTab === 'dashboard' && (
             <div className="space-y-6">
               <div className="p-6 rounded-2xl bg-gradient-to-r from-purple-900/40 via-[#0B0D19] to-cyan-900/20 border border-white/10 relative overflow-hidden">
-                <h1 className="text-2xl font-bold text-white mb-2">Hayal Gücünü Hayata Geçir</h1>
-                <p className="text-slate-400 text-sm">Fikirlerin, yapay zekamız. Sonsuz olasılıklar.</p>
+                <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-2"><FolderKanban className="w-6 h-6 text-purple-400" /> Hayal Gücünü Hayata Geçir</h1>
+                <p className="text-slate-400 text-sm">Fikirlerin, yapay zekamız. Sonsuz olasılıklar ve sinematik evrenler.</p>
               </div>
             </div>
           )}
 
           {activeTab === 'marketplace' && (
             <div className="space-y-6">
-              <h2 className="text-xl font-bold text-white">Marketplace & Şablonlar</h2>
+              <h2 className="text-xl font-bold text-white flex items-center gap-2"><ShoppingBag className="w-5 h-5 text-purple-400" /> Marketplace & Şablonlar</h2>
               <p className="text-sm text-slate-400">Topluluğun oluşturduğu en iyi promptlar ve görseller burada.</p>
             </div>
           )}
 
           {activeTab === 'community' && (
             <div className="space-y-6">
-              <h2 className="text-xl font-bold text-white">Topluluk Akışı</h2>
-              <p className="text-sm text-slate-400">Diğer yaratıcıların paylaştığı son eserleri inceleyin.</p>
+              <h2 className="text-xl font-bold text-white flex items-center gap-2"><Users className="w-5 h-5 text-purple-400" /> Topluluk Akışı</h2>
+              <p className="text-sm text-slate-400">Diğer yaratıcıların paylaştığı son eserleri inceleyin ve remixleyin.</p>
             </div>
           )}
 
           {activeTab === 'analytics' && (
             <div className="space-y-6">
-              <h2 className="text-xl font-bold text-white">Analitik & Performans</h2>
+              <h2 className="text-xl font-bold text-white flex items-center gap-2"><Cpu className="w-5 h-5 text-purple-400" /> Analitik & Performans</h2>
               <p className="text-sm text-slate-400">GPU kullanım oranları ve günlük üretim istatistikleri.</p>
             </div>
           )}
 
           {activeTab === 'games' && (
             <div className="space-y-6">
-              <h2 className="text-xl font-bold text-white">Oynamak (Play & Earn)</h2>
+              <h2 className="text-xl font-bold text-white flex items-center gap-2"><Gamepad2 className="w-5 h-5 text-purple-400" /> Oynamak (Play & Earn)</h2>
               <p className="text-sm text-slate-400">Günlük görevler ve turnuvalarla ekstra kredi kazan.</p>
             </div>
           )}
 
         </main>
 
+        {/* RIGHT SIDEBAR (SYSTEM STATUS) */}
         <aside className="w-80 border-l border-white/10 bg-[#05060E]/50 backdrop-blur-md p-4 hidden 2xl:block space-y-6 overflow-y-auto">
           <div className="p-4 rounded-2xl bg-[#0B0D19] border border-white/10 space-y-3">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Sistem Durumu</h3>
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Cpu className="w-4 h-4 text-cyan-400" /> Sistem Durumu
+            </h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-slate-400">GPU Kullanımı</span>
@@ -279,7 +289,7 @@ export function StudioShell() {
                 <div className="w-[63%] h-full bg-cyan-400 rounded-full"></div>
               </div>
               <div className="flex justify-between pt-2">
-                <span className="text-slate-400">VRAM</span>
+                <span className="text-slate-400 flex items-center gap-1"><HardDrive className="w-3.5 h-3.5" /> VRAM</span>
                 <span className="font-bold text-white">12.4 / 16 GB</span>
               </div>
             </div>
@@ -302,6 +312,7 @@ export function StudioShell() {
 
       </div>
 
+      {/* FOOTER */}
       <footer className="h-10 border-t border-white/10 bg-[#05060E] px-6 flex items-center justify-between text-xs text-slate-400">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400"></span> Sistem: Optimal</span>
