@@ -30,7 +30,6 @@ export function StudioShell() {
   return (
     <div className="min-h-screen bg-[#05060E] text-slate-100 font-sans selection:bg-purple-500 selection:text-white flex flex-col justify-between overflow-x-hidden">
       
-      {/* TOP HEADER */}
       <header className="h-16 border-b border-white/10 bg-[#05060E]/80 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -68,10 +67,8 @@ export function StudioShell() {
         </div>
       </header>
 
-      {/* MAIN BODY LAYOUT */}
       <div className="flex flex-1 overflow-hidden">
         
-        {/* LEFT SIDEBAR */}
         <aside className="w-64 border-r border-white/10 bg-[#05060E]/50 backdrop-blur-md p-4 hidden md:flex flex-col justify-between overflow-y-auto">
           <div className="space-y-6">
             <div>
@@ -119,13 +116,11 @@ export function StudioShell() {
           </div>
         </aside>
 
-        {/* CENTER CONTENT AREA */}
         <main className="flex-1 p-6 overflow-y-auto space-y-6">
           
           {activeTab === 'ai-studio' && (
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
               
-              {/* PROMPT & CONTROLS PANEL */}
               <div className="xl:col-span-5 space-y-4">
                 <div className="p-5 rounded-2xl bg-[#0B0D19] border border-white/10 shadow-2xl backdrop-blur-xl relative">
                   <div className="flex items-center justify-between mb-3">
@@ -152,7 +147,6 @@ export function StudioShell() {
                   </div>
                 </div>
 
-                {/* MODEL & SETTINGS */}
                 <div className="p-5 rounded-2xl bg-[#0B0D19] border border-white/10 shadow-2xl space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -200,7 +194,6 @@ export function StudioShell() {
                 </div>
               </div>
 
-              {/* LIVE PREVIEW & TIMELINE */}
               <div className="xl:col-span-7 space-y-4">
                 <div className="p-4 rounded-2xl bg-[#0B0D19] border border-white/10 shadow-2xl relative overflow-hidden">
                   <div className="flex items-center justify-between mb-3">
@@ -219,7 +212,6 @@ export function StudioShell() {
                     </div>
                   </div>
 
-                  {/* TIMELINE */}
                   <div className="mt-4 pt-4 border-t border-white/10 space-y-2">
                     <div className="flex justify-between text-xs text-slate-400">
                       <span>Timeline (0s / 8s)</span>
@@ -279,7 +271,6 @@ export function StudioShell() {
 
         </main>
 
-        {/* RIGHT CONTEXT PANEL */}
         <aside className="w-80 border-l border-white/10 bg-[#05060E]/50 backdrop-blur-md p-4 hidden 2xl:block space-y-6 overflow-y-auto">
           <div className="p-4 rounded-2xl bg-[#0B0D19] border border-white/10 space-y-3">
             <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Sistem Durumu</h3>
@@ -315,7 +306,6 @@ export function StudioShell() {
 
       </div>
 
-      {/* BOTTOM STATUS BAR */}
       <footer className="h-10 border-t border-white/10 bg-[#05060E] px-6 flex items-center justify-between text-xs text-slate-400">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400"></span> Sistem: Optimal</span>
